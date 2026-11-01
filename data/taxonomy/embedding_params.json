@@ -1,0 +1,7 @@
+{
+  "FLOOR": 0.375,
+  "TOP_K": 4,
+  "selected_method": "keyword",
+  "tuned_on": "tune half of data/taxonomy/gold_topics.json",
+  "tune_f1": 0.7097
+}

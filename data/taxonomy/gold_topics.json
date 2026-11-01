@@ -1,0 +1,136 @@
+{
+  "_status": "provisional, not yet reviewed",
+  "_method": "Spec 11.3, re-sampled 2026-11-01 after seminar/research/internship courses were made non-recommendable: the 170 recommendable codes sorted, every 8th taken (index 0, 8, ..., 152). Topics chosen only where the description supports them. ECEN 607 (analog circuits) and ECEN 711 (sustainable energy) support no taxonomy topic, so their gold sets are empty instead of padded; several other ECEN power and circuit courses carry one label. Split: interleaved within each department by sorted code (1st tune, 2nd test, ...), so each half has 5 CSCE and 5 ECEN courses. Team decision 2026-11-01, a deviation from spec 11.3 (first 10 = tune, last 10 = test), which put every CSCE course in the tune half and every ECEN course in the test half. Aastha's review is authoritative.",
+  "CSCE 603": {
+    "covers": [
+      "databases"
+    ],
+    "split": "tune"
+  },
+  "CSCE 620": {
+    "covers": [
+      "computational geometry",
+      "algorithms"
+    ],
+    "split": "test"
+  },
+  "CSCE 631": {
+    "covers": [
+      "intelligent agents"
+    ],
+    "split": "tune"
+  },
+  "CSCE 640": {
+    "covers": [
+      "quantum computing",
+      "algorithms"
+    ],
+    "split": "test"
+  },
+  "CSCE 649": {
+    "covers": [
+      "computer graphics",
+      "geometric modeling"
+    ],
+    "split": "tune"
+  },
+  "CSCE 662": {
+    "covers": [
+      "distributed systems",
+      "computer networks",
+      "operating systems"
+    ],
+    "split": "test"
+  },
+  "CSCE 672": {
+    "covers": [
+      "human computer interaction"
+    ],
+    "split": "tune"
+  },
+  "CSCE 704": {
+    "covers": [
+      "security",
+      "data mining",
+      "machine learning"
+    ],
+    "split": "test"
+  },
+  "CSCE 715": {
+    "covers": [
+      "security",
+      "network security",
+      "cryptography"
+    ],
+    "split": "tune"
+  },
+  "CSCE 749": {
+    "covers": [
+      "cryptography",
+      "privacy",
+      "security"
+    ],
+    "split": "test"
+  },
+  "ECEN 607": {
+    "covers": [],
+    "split": "tune"
+  },
+  "ECEN 615": {
+    "covers": [
+      "scientific computing",
+      "optimization"
+    ],
+    "split": "test"
+  },
+  "ECEN 630": {
+    "covers": [
+      "control systems",
+      "signal processing"
+    ],
+    "split": "tune"
+  },
+  "ECEN 643": {
+    "covers": [
+      "probability"
+    ],
+    "split": "test"
+  },
+  "ECEN 665": {
+    "covers": [
+      "wireless systems"
+    ],
+    "split": "tune"
+  },
+  "ECEN 679": {
+    "covers": [
+      "embedded systems"
+    ],
+    "split": "test"
+  },
+  "ECEN 711": {
+    "covers": [],
+    "split": "tune"
+  },
+  "ECEN 721": {
+    "covers": [
+      "signal processing"
+    ],
+    "split": "test"
+  },
+  "ECEN 740": {
+    "covers": [
+      "machine learning",
+      "deep learning",
+      "pattern recognition",
+      "statistics"
+    ],
+    "split": "tune"
+  },
+  "ECEN 752": {
+    "covers": [
+      "computer architecture"
+    ],
+    "split": "test"
+  }
+}

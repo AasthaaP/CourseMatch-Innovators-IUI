@@ -1,0 +1,88 @@
+{
+  "_note": "Hand written sample profiles (spec 13.2). Every completed course code exists in the courses table; scripts/load_samples.py checks this and fails loudly.",
+  "ml_focused": {
+    "label": "MS CS, machine learning focus, 3 courses done",
+    "program": "MSCS",
+    "graduation_term": "2027FA",
+    "completed_courses": [
+      "CSCE 625",
+      "CSCE 629",
+      "MATH 251"
+    ],
+    "interests": [
+      "machine learning",
+      "computer vision",
+      "deep learning"
+    ],
+    "credits_per_term": 9,
+    "preferred_days": [
+      "M",
+      "W",
+      "F"
+    ]
+  },
+  "systems_switcher": {
+    "label": "MS CS, switching from theory to systems",
+    "program": "MSCS",
+    "graduation_term": "2027SP",
+    "completed_courses": [
+      "CSCE 627",
+      "CSCE 629",
+      "CSCE 411"
+    ],
+    "interests": [
+      "distributed systems",
+      "operating systems",
+      "cloud computing"
+    ],
+    "credits_per_term": 9,
+    "preferred_days": [
+      "T",
+      "R"
+    ]
+  },
+  "first_semester": {
+    "label": "MS CS, first semester, no CSCE courses yet",
+    "program": "MSCS",
+    "graduation_term": "2028SP",
+    "completed_courses": [
+      "MATH 304",
+      "STAT 211"
+    ],
+    "interests": [
+      "machine learning",
+      "databases"
+    ],
+    "credits_per_term": 9,
+    "preferred_days": [
+      "M",
+      "T",
+      "W",
+      "R",
+      "F"
+    ]
+  },
+  "near_graduation": {
+    "label": "MS CS, graduating next term, 7 courses done",
+    "program": "MSCS",
+    "graduation_term": "2027SP",
+    "completed_courses": [
+      "CSCE 606",
+      "CSCE 611",
+      "CSCE 614",
+      "CSCE 625",
+      "CSCE 629",
+      "CSCE 633",
+      "CSCE 662"
+    ],
+    "interests": [
+      "security",
+      "privacy"
+    ],
+    "credits_per_term": 6,
+    "preferred_days": [
+      "M",
+      "W"
+    ]
+  }
+}

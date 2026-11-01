@@ -1,0 +1,37 @@
+# Code-only repository: everything except the code and the data the code needs.
+
+# Python / Node / OS
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+dist/
+.DS_Store
+
+# Secrets (any .env, including frontend/.env); the .env.example files are committed
+.env
+
+# Raw catalog pages and the search index are rebuilt locally (docs: spec 0.1, scripts/build_index.py)
+data/raw/*.html
+data/index/*.faiss
+data/index/*.npy
+data/index/index_meta.json
+
+# Documentation, reports and study materials stay out of git; the folder itself is kept
+docs/*
+!docs/.gitkeep
+
+# Old project copy, assistant and editor settings, planning notes
+legacy/
+.claude/
+CLAUDE.md
+PHASE3_PROMPTS.md
+.vscode/
+
+# Office files, PDFs and images
+*.docx
+*.pptx
+*.pdf
+*.png

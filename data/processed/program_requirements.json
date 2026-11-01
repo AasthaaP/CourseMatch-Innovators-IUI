@@ -1,0 +1,12 @@
+{
+  "_source": "Hand entered (spec 12.2 fallback) on 2026-11-01 from https://catalog.tamu.edu/graduate/colleges-schools-interdisciplinary/engineering/computer-science/ms/ (Program Requirements tab). That page lists credit rules only and names no core courses, so there are no core rows. data/raw/program_mscs.html (the spec 0.1 URL) is the department course list and contains no requirement tables.",
+  "MSCS": [
+    { "bucket": "seminar", "course_code": "CSCE 681" },
+    { "bucket": "elective", "rule_text": "Any 600-level CSCE course", "min_credits": 30 },
+    { "bucket": "elective", "rule_text": "Any 700-level CSCE course" },
+    { "bucket": "elective", "rule_text": "Thesis option only: a thesis and final examination are required" },
+    { "bucket": "elective", "rule_text": "No more than 8 credit hours of CSCE 691 (Research)" },
+    { "bucket": "elective", "rule_text": "No more than 8 credit hours of CSCE 685 (Directed Studies)" },
+    { "bucket": "elective", "rule_text": "A maximum of 9 credit hours of 300- or 400-level courses may be applied" }
+  ]
+}

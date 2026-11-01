@@ -1,0 +1,20 @@
+{
+  "_note": "Spec 30.1: 15 queries for scripts/eval_offline.py, spread over the interests of the four sample profiles (ML/vision, systems, databases, security) and a few areas none of them names.",
+  "queries": [
+    "machine learning for images",
+    "distributed cloud systems",
+    "security and privacy",
+    "deep learning",
+    "natural language processing",
+    "computer vision",
+    "operating systems",
+    "databases",
+    "algorithms and complexity",
+    "computer networks",
+    "data mining and analytics",
+    "human computer interaction",
+    "computer graphics",
+    "robotics",
+    "signal processing"
+  ]
+}
