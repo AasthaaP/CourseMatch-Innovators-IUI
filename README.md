@@ -34,7 +34,8 @@ npm run dev
 - App: http://localhost:3000
 - Baseline: http://localhost:3000/baseline
 
-Chat needs `ANTHROPIC_API_KEY` in `.env`; everything else works without it.
+Chat works without any API key (a built-in rule parser turns messages into profile or search changes). With
+`ANTHROPIC_API_KEY` in `.env` it uses Claude instead; `COURSEMATCH_CHAT=rules` or `=claude` forces one.
 
 macOS: embeddings run on CPU and the faiss/torch OpenMP settings are applied in `backend/app/__init__.py`;
 a new script must import `backend.app` before `faiss` or `sentence_transformers`, or it can segfault.

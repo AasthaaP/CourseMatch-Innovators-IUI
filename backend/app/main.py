@@ -178,7 +178,8 @@ def recommend(body: S.RecommendRequest, db: Session = Depends(get_db)):
 
 @app.post("/api/chat", response_model=S.ChatResponse)
 def chat(body: S.ChatRequest, db: Session = Depends(get_db)):
-    if not llm_key_present():
+    backend = chat_mod.chat_backend()
+    if backend == "claude" and not llm_key_present():  # only when COURSEMATCH_CHAT=claude is forced
         return JSONResponse(status_code=503, content={
             "error": "no_api_key", "message": "Chat is unavailable. No Anthropic API key is configured."})
     student = db.get(Student, body.student_id)
@@ -190,7 +191,7 @@ def chat(body: S.ChatRequest, db: Session = Depends(get_db)):
         print(f"[chat] model call failed: {e}", file=sys.stderr)
         return JSONResponse(status_code=503, content={"error": "llm_unavailable",
                                                       "message": "Chat is unavailable right now. Try again later."})
-    events.log(student.id, student.condition, "chat_sent", payload={"action": out["action"]}, db=db)
+    events.log(student.id, student.condition, "chat_sent", payload={"action": out["action"], "parser": backend}, db=db)
     return out
 
 

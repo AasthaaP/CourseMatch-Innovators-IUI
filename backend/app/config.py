@@ -42,6 +42,12 @@ LLM_MODEL = "claude-sonnet-4-5"
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 
 
+#   auto   = Claude when a real key is present, otherwise the key-free rule parser (chat_rules.py)
+#   rules  = always the rule parser (deterministic, e.g. for every study session)
+#   claude = always Claude; /api/chat returns 503 no_api_key when the key is missing
+CHAT_BACKEND = os.getenv("COURSEMATCH_CHAT", "auto").strip().lower()
+
+
 def llm_key_present() -> bool:
     key = ANTHROPIC_API_KEY
     return bool(key) and "REPLACE_ME" not in key

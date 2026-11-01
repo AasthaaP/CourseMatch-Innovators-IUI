@@ -1,7 +1,8 @@
 // Chat panel (spec 28.1) and the clarification prompt (28.2). The backend logs chat_sent (spec 23.2).
-// On 503 the input is replaced by the unavailable message; the rest of the page keeps working.
-import { useEffect, useState } from 'react'
-import { chat, health } from '../../api.js'
+// Chat works without an API key (the backend's rule parser answers). Only a 503 from /api/chat replaces the
+// input with the unavailable message; the rest of the page keeps working.
+import { useState } from 'react'
+import { chat } from '../../api.js'
 import Clarification from '../Clarification/Clarification.jsx'
 
 const UNAVAILABLE = 'Chat is unavailable. No API key is configured.'
@@ -11,10 +12,6 @@ export default function ChatPanel({ studentId, clarification, onAnswer, onDismis
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const [unavailable, setUnavailable] = useState(null)
-
-  useEffect(() => {
-    health().then((r) => { if (r.ok && !r.data.llm_key_present) setUnavailable(UNAVAILABLE) })
-  }, [])
 
   const send = async (e) => {
     e.preventDefault()

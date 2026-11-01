@@ -1,14 +1,16 @@
 """Chat: one student message -> one validated structured action. The model never ranks, never writes
 an explanation, never states a prerequisite; the normal pipeline runs again afterwards.
 
-Spec: S15 (Section 21). Owner: Shubham. Without ANTHROPIC_API_KEY the endpoint returns 503 (main.py)
-and makes no API call.
+Spec: S15 (Section 21). Owner: Shubham. Two parsers produce the action: Claude (needs ANTHROPIC_API_KEY) or
+the key-free rule parser in chat_rules.py. config.CHAT_BACKEND picks one; both go through validate().
 """
 import json
 import re
 
 from sqlalchemy import delete, select
 
+from . import config
+from .chat_rules import parse as parse_rules
 from .config import ANTHROPIC_API_KEY, LLM_MODEL
 from .models import Course, Interaction, Student, StudentInterest
 from .topics import load_taxonomy
@@ -17,6 +19,10 @@ ACTIONS = {"update_interests", "new_query", "update_profile", "explain", "none"}
 CODE_RE = re.compile(r"^[A-Z]{2,5} \d{3}$")
 TERM_RE = re.compile(r"^\d{4}(SP|SU|FA)$")
 NOT_UNDERSTOOD = {"action": "none", "reply": "I did not understand that.", "profile_changed": False, "new_query": None}
+# The rule parser only knows set phrasings, so when it misses it says what it can do.
+RULES_HELP = ('I did not understand that. Try: "add machine learning", "I care more about systems than theory", '
+              '"show me courses on cloud security", "why CSCE 636?", "compare 701 and 702", or "I can only take 6 credits".')
+BADGE = {"ready": "Ready", "one_course_first": "One course first", "not_sure": "Not sure"}
 
 SYSTEM_PROMPT = """You convert a student's message about course planning into one structured action.
 
@@ -81,10 +87,13 @@ def validate(raw: str, db) -> dict | None:
         else:
             return None
     elif a == "explain":
-        code = act.get("course_code")
-        if not isinstance(code, str) or not CODE_RE.match(code) or \
-                db.scalar(select(Course.id).where(Course.code == code)) is None:
+        codes = act.get("course_codes", [act.get("course_code")])  # course_codes: rule parser comparisons
+        if not isinstance(codes, list) or not 1 <= len(codes) <= 3:
             return None
+        for code in codes:
+            if not isinstance(code, str) or not CODE_RE.match(code) or \
+                    db.scalar(select(Course.id).where(Course.code == code)) is None:
+                return None
     return act
 
 
@@ -95,21 +104,60 @@ def _join(items) -> str:
     return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
 
 
-def explain_reply(student_id, code, db) -> str:
-    """Assembled from explain.py output for the student's latest query, never written by the model."""
+def _explained(student_id, codes, db):
+    """(rerank result, explanation) per course for the student's latest query, from rerank.py and
+    explain.py: the same features and text as the cards, never written by a model."""
     from .explain import build
     from .rerank import rank
     from .retrieval import retrieval_service
 
     query = db.scalar(select(Interaction.query).where(Interaction.student_id == student_id,
                                                       Interaction.event == "search")
-                      .order_by(Interaction.id.desc()).limit(1)) or code
-    score = 0.0
-    if retrieval_service.is_ready():
-        score = dict(retrieval_service.search(query)).get(code, 0.0)
-    result = rank(student_id, query, [(code, score)], db, top_k=1)[0]
-    e = build(result, student_id, query, db)
+                      .order_by(Interaction.id.desc()).limit(1)) or " ".join(codes)
+    scores = dict(retrieval_service.search(query)) if retrieval_service.is_ready() else {}
+    out = []
+    for code in codes:
+        result = rank(student_id, query, [(code, scores.get(code, 0.0))], db, top_k=1)[0]
+        out.append((result, build(result, student_id, query, db)))
+    return out
+
+
+def explain_reply(student_id, code, db) -> str:
+    (_, e), = _explained(student_id, [code], db)
     return "\n".join([e["short"], *(f"{f['label']}: {f['detail']}" for f in e["factors"])])
+
+
+def compare_reply(student_id, codes, db) -> str:
+    """Facts for each course side by side, plus which matches more of the student's interests. No verdict:
+    the chat never ranks (CLAUDE.md rule 2), so the student decides."""
+    titles = dict(db.execute(select(Course.code, Course.title).where(Course.code.in_(codes))).all())
+    keep = ("interest", "topics", "degree", "have", "missing", "assumes")
+    lines, matched = [], {}
+    for result, e in _explained(student_id, codes, db):
+        code = result["code"]
+        matched[code] = result["matched_topics"]
+        lines.append(f"{code} {titles.get(code, '')} ({BADGE[result['readiness']['state']]}): {e['short']}")
+        lines += [f"  {f['label']}: {f['detail']}" for f in e["factors"] if f["kind"] in keep]
+    counts = {c: len(m) for c, m in matched.items()}
+    if not any(counts.values()):
+        lines.append("Neither matches your stated interests; the reasons above come from your search.")
+    elif len(set(counts.values())) == 1:
+        lines.append("They match the same number of your interests; compare the topics and prerequisites above.")
+    else:
+        best = max(counts, key=counts.get)
+        lines.append(f"{best} matches more of your interests ({_join(matched[best])}). "
+                     "The badges show what you can take now.")
+    return "\n".join(lines)
+
+
+def resolve_code(dept, num, db) -> str | None:
+    """A real course code for "CSCE 701" or a bare "701": prefer recommendable courses, then CSCE."""
+    if dept:
+        code = f"{dept.upper()} {num}"
+        return code if db.scalar(select(Course.id).where(Course.code == code)) else None
+    rows = db.execute(select(Course.code, Course.is_recommendable).where(Course.code.like(f"% {num}"))).all()
+    rows.sort(key=lambda r: (-r[1], not r[0].startswith("CSCE"), r[0]))
+    return rows[0][0] if rows else None
 
 
 def act_on(student_id, act: dict, db) -> dict:
@@ -138,11 +186,24 @@ def act_on(student_id, act: dict, db) -> dict:
         return {"action": a, "reply": f"Updated {act['field']} to {act['value']}.", "profile_changed": True,
                 "new_query": None}
     if a == "explain":
-        return {"action": a, "reply": explain_reply(student_id, act["course_code"], db), "profile_changed": False,
-                "new_query": None}
+        codes = act.get("course_codes")
+        reply = compare_reply(student_id, codes, db) if codes else explain_reply(student_id, act["course_code"], db)
+        return {"action": a, "reply": reply, "profile_changed": False, "new_query": None}
     return dict(NOT_UNDERSTOOD)
 
 
+def chat_backend() -> str:
+    """'claude' or 'rules' for this request (see config.CHAT_BACKEND)."""
+    if config.CHAT_BACKEND in ("claude", "rules"):
+        return config.CHAT_BACKEND
+    return "claude" if config.llm_key_present() else "rules"
+
+
 def handle(student_id, message, db) -> dict:
-    act = validate(ask_model(message), db)
-    return dict(NOT_UNDERSTOOD) if act is None else act_on(student_id, act, db)
+    if chat_backend() == "claude":
+        act = validate(ask_model(message), db)
+        return dict(NOT_UNDERSTOOD) if act is None else act_on(student_id, act, db)
+    act = validate(json.dumps(parse_rules(message, resolve=lambda d, n: resolve_code(d, n, db))), db)
+    if act is None or act["action"] == "none":
+        return {**NOT_UNDERSTOOD, "reply": RULES_HELP}
+    return act_on(student_id, act, db)

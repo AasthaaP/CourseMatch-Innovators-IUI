@@ -1,4 +1,5 @@
-"""Spec 21: chat with a mocked Anthropic client (no real key is available during the build)."""
+"""Spec 21: chat with a mocked Anthropic client (no real key is available during the build), and the
+key-free rule parser that answers when there is no key."""
 from types import SimpleNamespace
 
 import anthropic
@@ -29,6 +30,7 @@ def client(monkeypatch):
     FakeAnthropic.calls = []
     monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
     monkeypatch.setattr("backend.app.main.llm_key_present", lambda: True)
+    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: True)  # auto mode -> Claude
     with TestClient(app) as c:
         yield c
 
@@ -86,10 +88,30 @@ def test_new_query_and_update_profile(client):
     assert client.get(f"/api/profile/{sid}").json()["stated"]["credits_per_term"] == 6
 
 
-def test_no_key_returns_503_without_calling_the_model(monkeypatch):
+def test_no_key_uses_rule_parser_without_calling_the_model(monkeypatch):
     FakeAnthropic.calls = []
     monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
     monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    with TestClient(app) as c:
+        sid = start(c, ["complexity theory"])
+        r = c.post("/api/chat", json={"student_id": sid, "message": "I care more about systems than theory now"})
+        assert r.status_code == 200
+        assert r.json()["action"] == "update_interests" and r.json()["profile_changed"] is True
+        assert c.get(f"/api/profile/{sid}").json()["stated"]["interests"] == ["distributed systems", "operating systems"]
+        nothing = c.post("/api/chat", json={"student_id": sid, "message": "hello there"}).json()
+        assert nothing["action"] == "none" and nothing["profile_changed"] is False
+        assert nothing["reply"].startswith("I did not understand that. Try:")
+    assert FakeAnthropic.calls == []
+
+
+def test_forced_claude_without_key_returns_503_without_calling_the_model(monkeypatch):
+    FakeAnthropic.calls = []
+    monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
+    monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "claude")
     with TestClient(app) as c:
         r = c.post("/api/chat", json={"student_id": "s_00000000", "message": "hi"})
     assert r.status_code == 503

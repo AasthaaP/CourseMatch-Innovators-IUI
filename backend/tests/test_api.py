@@ -155,8 +155,16 @@ def test_index_not_ready(client, monkeypatch):
     assert r.status_code == 503 and r.json()["error"] == "index_not_ready"
 
 
-def test_chat_without_key_is_503(client, monkeypatch):
+def test_chat_without_key_uses_rules(client, monkeypatch):
+    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    r = client.post("/api/chat", json={"student_id": new_student(client), "message": "add computer vision"})
+    assert r.status_code == 200 and r.json()["action"] == "update_interests"
+
+
+def test_chat_forced_claude_without_key_is_503(client, monkeypatch):
     monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "claude")
     r = client.post("/api/chat", json={"student_id": new_student(client), "message": "hi"})
     assert r.status_code == 503 and r.json()["error"] == "no_api_key"
 
@@ -167,3 +175,15 @@ def test_clarification_answer_adds_interest(client):
                                                "clarification_answer": "computer vision"}).json()
     assert body["clarification"] is None
     assert client.get(f"/api/profile/{sid}").json()["stated"]["interests"] == ["computer vision"]
+
+
+def test_chat_compares_bare_course_numbers_without_a_verdict(client, monkeypatch):
+    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
+    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    sid = new_student(client)
+    client.post("/api/samples/ml_focused/load", json={"student_id": sid})
+    r = client.post("/api/chat", json={"student_id": sid, "message": "Which is better for me, 633 or 636?"}).json()
+    assert r["action"] == "explain" and r["profile_changed"] is False
+    assert "CSCE 633 Machine Learning (Ready)" in r["reply"] and "CSCE 636 Deep Learning (One course first)" in r["reply"]
+    assert "You still need: MATH 304" in r["reply"]
+    assert "better" not in r["reply"].lower()  # facts side by side, never a verdict
