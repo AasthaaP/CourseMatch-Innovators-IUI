@@ -11,7 +11,8 @@ from datetime import datetime, timezone
 from sqlalchemy import delete, select
 
 from .config import FEEDBACK_CAP, FEEDBACK_STEP, SAMPLES_PATH
-from .models import (Course, Inference, SavedCourse, Student, StudentCourse, StudentInterest,
+from . import models as M
+from .models import (Course, Inference, Interaction, SavedCourse, Student, StudentCourse, StudentInterest,
                      StudentStated)
 from .programs import program_codes
 from .topics import course_topics, load_taxonomy
@@ -48,6 +49,19 @@ def create_student(db, condition: str = "system", student_id: str | None = None)
     db.add(Student(id=sid, created_at=now(), is_sample=0, condition=condition, profile_version=1))
     db.commit()
     return sid
+
+
+STUDENT_TABLES = (StudentStated, StudentCourse, StudentInterest, Inference, SavedCourse, Interaction)
+
+
+def delete_student(student_id, db) -> None:
+    """Delete the student row and every row that belongs to it. Does not commit; the caller commits."""
+    for model in STUDENT_TABLES:
+        db.execute(delete(model).where(model.student_id == student_id))
+    study_session = getattr(M, "StudySession", None)
+    if study_session is not None:
+        db.execute(delete(study_session).where(study_session.student_id == student_id))
+    db.execute(delete(Student).where(Student.id == student_id))
 
 
 def completed_courses(student_id, db) -> set[str]:
