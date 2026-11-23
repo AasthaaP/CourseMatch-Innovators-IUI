@@ -1,4 +1,4 @@
-// Headings for the interest chips in onboarding step 3 (spec 25.1). Topics come from the frozen
+// Headings for the interest chips in onboarding step 3 (spec 25.1). Topics come from the
 // taxonomy; any topic not listed here still appears, under "Other".
 import TAXONOMY from '../../data/taxonomy/topics.json'
 
@@ -11,6 +11,9 @@ const GROUPS = [
   ['Systems and hardware', ['operating systems', 'computer architecture', 'parallel computing', 'distributed systems',
     'cloud computing', 'computer networks', 'wireless systems', 'high performance computing', 'embedded systems',
     'hardware verification', 'signal processing']],
+  ['Electrical engineering', ['circuit design', 'power systems', 'power electronics', 'electromagnetics',
+    'semiconductor devices', 'photonics and optics', 'energy systems', 'microelectromechanical systems',
+    'information theory', 'sensors']],
   ['Software', ['software engineering', 'programming languages', 'compilers', 'formal methods']],
   ['Security', ['security', 'cryptography', 'privacy', 'network security', 'digital forensics']],
   ['People, graphics and robots', ['human computer interaction', 'user interfaces', 'accessibility', 'virtual reality',

@@ -1,6 +1,6 @@
 {
   "_status": "provisional, not yet reviewed",
-  "_method": "Spec 11.3, re-sampled 2026-11-01 after seminar/research/internship courses were made non-recommendable: the 170 recommendable codes sorted, every 8th taken (index 0, 8, ..., 152). Topics chosen only where the description supports them. ECEN 607 (analog circuits) and ECEN 711 (sustainable energy) support no taxonomy topic, so their gold sets are empty instead of padded; several other ECEN power and circuit courses carry one label. Split: interleaved within each department by sorted code (1st tune, 2nd test, ...), so each half has 5 CSCE and 5 ECEN courses. Team decision 2026-11-01, a deviation from spec 11.3 (first 10 = tune, last 10 = test), which put every CSCE course in the tune half and every ECEN course in the test half. Aastha's review is authoritative.",
+  "_method": "Spec 11.3, re-sampled 2026-11-01 after seminar/research/internship courses were made non-recommendable: the 170 recommendable codes sorted, every 8th taken (index 0, 8, ..., 152). Topics chosen only where the description supports them. ECEN 607 (analog circuits) and ECEN 711 (sustainable energy) support no taxonomy topic, so their gold sets are empty instead of padded; several other ECEN power and circuit courses carry one label. Split: interleaved within each department by sorted code (1st tune, 2nd test, ...), so each half has 5 CSCE and 5 ECEN courses. Team decision 2026-11-01, a deviation from spec 11.3 (first 10 = tune, last 10 = test), which put every CSCE course in the tune half and every ECEN course in the test half. Aastha's review is authoritative. 2026-11 taxonomy extended with 10 electrical engineering topics; ECEN gold entries updated for them.",
   "CSCE 603": {
     "covers": [
       "databases"
@@ -73,48 +73,59 @@
     "split": "test"
   },
   "ECEN 607": {
-    "covers": [],
+    "covers": [
+      "circuit design"
+    ],
     "split": "tune"
   },
   "ECEN 615": {
     "covers": [
       "scientific computing",
-      "optimization"
+      "optimization",
+      "power systems"
     ],
     "split": "test"
   },
   "ECEN 630": {
     "covers": [
       "control systems",
-      "signal processing"
+      "signal processing",
+      "power electronics"
     ],
     "split": "tune"
   },
   "ECEN 643": {
     "covers": [
-      "probability"
+      "probability",
+      "power systems"
     ],
     "split": "test"
   },
   "ECEN 665": {
     "covers": [
-      "wireless systems"
+      "wireless systems",
+      "circuit design"
     ],
     "split": "tune"
   },
   "ECEN 679": {
     "covers": [
-      "embedded systems"
+      "embedded systems",
+      "power systems"
     ],
     "split": "test"
   },
   "ECEN 711": {
-    "covers": [],
+    "covers": [
+      "energy systems"
+    ],
     "split": "tune"
   },
   "ECEN 721": {
     "covers": [
-      "signal processing"
+      "signal processing",
+      "photonics and optics",
+      "circuit design"
     ],
     "split": "test"
   },
@@ -129,7 +140,8 @@
   },
   "ECEN 752": {
     "covers": [
-      "computer architecture"
+      "computer architecture",
+      "circuit design"
     ],
     "split": "test"
   }

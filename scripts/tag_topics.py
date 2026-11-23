@@ -22,6 +22,13 @@ COVERAGE_PATH = ROOT / "docs/DATA_COVERAGE.md"
 TOPIC_SECTION = "## Topic labelling method comparison"
 FLOORS = [round(0.15 + 0.025 * i, 3) for i in range(11)]  # 0.15 .. 0.40
 TOP_KS = [4, 6, 8]
+# The 26 recommendable ECEN courses that had no covers topic from either option under the original 58-topic
+# taxonomy (final spec Section 1). The report counts how many of them the extended taxonomy now labels.
+PREVIOUSLY_UNLABELLED = [
+    "ECEN 600", "ECEN 607", "ECEN 611", "ECEN 612", "ECEN 613", "ECEN 616", "ECEN 620", "ECEN 635", "ECEN 640",
+    "ECEN 643", "ECEN 647", "ECEN 658", "ECEN 666", "ECEN 671", "ECEN 679", "ECEN 686", "ECEN 688", "ECEN 711",
+    "ECEN 712", "ECEN 714", "ECEN 721", "ECEN 733", "ECEN 761", "ECEN 767", "ECEN 772", "ECEN 777",
+]
 MAX_COVERS, MAX_ASSUMES = 8, 5
 
 # Option A dictionary: every taxonomy topic -> match strings (the topic itself plus synonyms).
@@ -91,6 +98,21 @@ SYNONYMS = {
     "embedded systems": ["embedded", "microcontroller", "real-time system", "cyber-physical"],
     "hardware verification": ["hardware verification", "design verification", "functional verification", "verilog", "testing of digital", "diagnosis of digital", "hardware description language"],
     "game theory": ["game theory", "game-theoretic", "mechanism design", "equilibri"],
+    # Electrical engineering topics, added 2026-11 (final spec 7.2).
+    "circuit design": ["circuit design", "analog circuit", "integrated circuit", "network theory",
+                       "low-noise", "amplifier", "mixed-signal", "rectifier and inverter circuits"],
+    "power systems": ["power system", "relay", "protective relaying", "transmission", "power grid",
+                      "faults"],
+    "power electronics": ["power electronic", "rectifier", "inverter", "converter", "motor drive"],
+    "electromagnetics": ["electromagnetic", "maxwell", "electromechanical", "transients", "antenna"],
+    "semiconductor devices": ["semiconductor", "solid state", "thin film", "transistor", "device physics"],
+    "photonics and optics": ["optic", "photonic", "laser", "fiber"],
+    "energy systems": ["photovoltaic", "solar", "sustainable energy", "hybrid vehicle", "battery",
+                       "energy system"],
+    "microelectromechanical systems": ["mems", "microelectromechanical", "micromachining",
+                                       "microfabrication", "sensor fabrication"],
+    "information theory": ["information theory", "entropy", "channel capacity"],
+    "sensors": ["sensor", "biosensor", "transducer"],
 }
 # Phrases that contain a match string but mean something else; their matches are subtracted.
 EXCLUDE = {
@@ -237,6 +259,7 @@ def main():
                   for m, cov in (("keyword", covers_a), ("embedding", covers_b))}
         effective = sum(bool(labels[method][c][0] or labels[other][c][0]) for c in rec) / len(rec)
         uncovered = [c for c in rec if not (labels[method][c][0] or labels[other][c][0])]
+        now_labelled = [c for c in PREVIOUSLY_UNLABELLED if c in rec and (labels[method][c][0] or labels[other][c][0])]
 
         PARAMS_PATH.write_text(json.dumps({"FLOOR": FLOOR, "TOP_K": TOP_K, "selected_method": winner,
                                            "tuned_on": "tune half of data/taxonomy/gold_topics.json",
@@ -259,13 +282,16 @@ def main():
             f"Both options' labels are stored (`source` column). `backend/app/topics.py` reads the selected option "
             f"first and the other option only where the selected one has no label (spec 11.6), giving an effective "
             f"coverage of {effective:.2f} over the {len(rec)} recommendable courses.",
+            "", f"Taxonomy: {len(taxonomy)} topics (the original 58 plus 10 electrical engineering topics added "
+            "2026-11 for circuits, power, electromagnetics, devices, optics, energy, MEMS, information theory "
+            "and sensors).",
+            "", f"Previously unlabelled ECEN courses now labelled: {len(now_labelled)} of {len(PREVIOUSLY_UNLABELLED)}",
             "", f"Recommendable courses with no topic from either option ({len(uncovered)}): "
-            + (", ".join(uncovered) if uncovered else "none") + ". These are electrical engineering subjects "
-            "(circuits, power, electromagnetics, devices, energy) that the fixed 58-topic taxonomy does not name.",
+            + (", ".join(uncovered) if uncovered else "none") + ".",
             "", *([f"**Coverage is below 0.90 for both options (A {ma['coverage']:.2f}, B {mb['coverage']:.2f}; "
                    f"{effective:.2f} combined), so spec 11.4 disqualifies both and S5 acceptance item 4 (every "
-                   "recommendable course has a covers topic) is not met.** The taxonomy is kept fixed by team "
-                   "decision; these courses rank on retrieval similarity, degree fit and readiness only."]
+                   "recommendable course has a covers topic) is not met.** Courses without a topic rank on retrieval "
+                   "similarity, degree fit and readiness only."]
                   if min(ma["coverage"], mb["coverage"]) < 0.90 else []),
             "",
         ])
