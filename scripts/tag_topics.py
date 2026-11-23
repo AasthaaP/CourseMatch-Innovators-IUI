@@ -5,17 +5,25 @@ Spec: S5 (Section 11). Owner: Aastha.
 Run: python scripts/tag_topics.py [--compare] [--method keyword|embedding]
   default / --compare : run the 11.4 comparison, record it, write the winning method's labels
   --method X          : run the comparison, record it, but write method X's labels (re-run the loser)
+     python scripts/tag_topics.py --llm [--dry-run]
+  --llm               : key-gated LLM refinement (final spec Section 8); writes source='llm' rows, which
+                        backend/app/topics.py prefers. Without a valid key it prints a message and exits 0.
+  --llm --dry-run     : print the parsed result for the first three courses and write nothing
 """
 import argparse
+import hashlib
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+CACHE_PATH = ROOT / "data/processed/topic_cache.json"
+LLM_SECTION = "## LLM topic refinement"
 GOLD_PATH = ROOT / "data/taxonomy/gold_topics.json"
 PARAMS_PATH = ROOT / "data/taxonomy/embedding_params.json"
 COVERAGE_PATH = ROOT / "docs/DATA_COVERAGE.md"
@@ -188,11 +196,161 @@ def decide(a: dict, b: dict) -> tuple[str, str]:
     return "embedding", note + f"Test F1 within 0.05 ({a['f1']:.3f} vs {b['f1']:.3f}); the tie goes to Option B."
 
 
+# ---------------------------------------------------------------- LLM refinement (final spec Section 8)
+LLM_SYSTEM = """You label a university course with topics from a fixed list.
+
+Respond with a single JSON object and nothing else, in this shape:
+{{"covers": ["<topic>"], "assumes": ["<topic>"]}}
+
+"covers" lists at most 8 topics the course teaches.
+"assumes" lists at most 5 topics a student should already know before taking it.
+Every string must be an exact member of this list:
+{taxonomy}
+
+Use only topics the course description supports. If none apply, return empty lists."""
+
+LLM_USER = """Course: {code} {title}
+Description: {description}
+Prerequisite text: {prereq}"""
+
+
+def taxonomy_hash(taxonomy: list[str]) -> str:
+    return hashlib.sha256(json.dumps(taxonomy).encode()).hexdigest()
+
+
+def llm_prompts(course, taxonomy) -> tuple[str, str]:
+    return (LLM_SYSTEM.format(taxonomy=json.dumps(taxonomy)),
+            LLM_USER.format(code=course.code, title=course.title, description=course.description,
+                            prereq=course.prereq_raw.strip() or "none"))
+
+
+def parse_llm_labels(raw: str, taxonomy: list[str]) -> tuple[list[str], list[str]]:
+    """Raises ValueError when the response is not the expected JSON object. Unknown topics are discarded."""
+    text = raw.strip()
+    if text.startswith("```"):
+        text = text.strip("`").removeprefix("json").strip()
+    obj = json.loads(text)
+    if not isinstance(obj, dict) or not isinstance(obj.get("covers", []), list) \
+            or not isinstance(obj.get("assumes", []), list):
+        raise ValueError("not a {covers, assumes} object")
+    known = set(taxonomy)
+    keep = lambda xs: [t for t in dict.fromkeys(xs) if isinstance(t, str) and t in known]  # noqa: E731
+    return keep(obj.get("covers", []))[:MAX_COVERS], keep(obj.get("assumes", []))[:MAX_ASSUMES]
+
+
+def _load_cache(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def llm_pass(db, dry_run=False, cache_path=CACHE_PATH, coverage_path=COVERAGE_PATH, log=print) -> dict:
+    """Label every recommendable course through llm.complete, with a cache keyed by course code and taxonomy
+    hash. Replaces all source='llm' rows. Returns a summary dict."""
+    from sqlalchemy import delete, select
+
+    from backend.app import llm
+    from backend.app.models import Course, CourseTopic
+    from backend.app.topics import load_taxonomy
+
+    taxonomy = load_taxonomy()
+    thash, model = taxonomy_hash(taxonomy), llm.get_model()
+    cache = _load_cache(cache_path)
+    courses = db.scalars(select(Course).where(Course.is_recommendable == 1).order_by(Course.code)).all()
+    if dry_run:
+        courses = courses[:3]
+    labels, skipped = {}, {}
+    for course in courses:
+        hit = cache.get(course.code)
+        if hit and hit.get("taxonomy_hash") == thash:
+            raw = hit["response"]
+        else:
+            system, user = llm_prompts(course, taxonomy)
+            try:
+                raw = llm.complete(system, user, max_tokens=300)
+            except llm.LLMUnavailable as e:
+                skipped[course.code] = f"LLM unavailable ({e.reason})"
+                log(f"  {course.code}: skipped, LLM unavailable ({e.reason})")
+                continue
+            if not dry_run:
+                cache[course.code] = {"taxonomy_hash": thash, "model": model, "response": raw}
+                cache_path.write_text(json.dumps(cache, indent=2, sort_keys=True) + "\n")
+        try:
+            labels[course.code] = parse_llm_labels(raw, taxonomy)
+        except ValueError as e:
+            skipped[course.code] = f"unparseable response ({e})"
+            log(f"  {course.code}: skipped, unparseable response")
+            continue
+        if dry_run:
+            log(f"  {course.code}: covers {labels[course.code][0]} assumes {labels[course.code][1]}")
+
+    summary = {"model": model, "labelled": len(labels), "skipped": skipped, "total": len(courses)}
+    if dry_run:
+        return summary
+    db.execute(delete(CourseTopic).where(CourseTopic.source == "llm"))
+    db.add_all(CourseTopic(course_code=code, topic=t, role=role, source="llm")
+               for code, (covers, assumes) in labels.items()
+               for role, topics in (("covers", covers), ("assumes", assumes)) for t in topics)
+    db.commit()
+    rec = [c.code for c in courses]
+    covered = set(db.scalars(select(CourseTopic.course_code).where(CourseTopic.role == "covers",
+                                                                   CourseTopic.course_code.in_(rec))))
+    summary["coverage"] = len(covered) / len(rec) if rec else 0.0
+    summary["llm_coverage"] = sum(bool(labels.get(c, ([],))[0]) for c in rec) / len(rec) if rec else 0.0
+    section = "\n".join([
+        LLM_SECTION, "",
+        f"- Run date: {date.today().isoformat()}",
+        f"- Model: {model}",
+        f"- Courses labelled: {len(labels)} of {len(rec)}",
+        f"- Courses skipped: {len(skipped)}",
+        *(f"  - {c}: {why}" for c, why in sorted(skipped.items())),
+        f"- Recommendable `covers` coverage after the pass: {summary['coverage']:.2f} "
+        f"(courses with an LLM `covers` label: {summary['llm_coverage']:.2f})",
+        "", "Rows are stored with `source='llm'`; `backend/app/topics.py` prefers them over the keyword and "
+            "embedding labels. Raw responses are cached in `data/processed/topic_cache.json` by course code and "
+            "taxonomy hash, so a changed taxonomy re-labels automatically.", "",
+    ])
+    old = coverage_path.read_text() if coverage_path.exists() else ""
+    if LLM_SECTION in old:
+        start = old.index(LLM_SECTION)
+        nxt = old.find("\n## ", start + len(LLM_SECTION))
+        old = old[:start] + (old[nxt + 1:] if nxt != -1 else "")
+    coverage_path.parent.mkdir(parents=True, exist_ok=True)
+    coverage_path.write_text(old.rstrip() + "\n\n" + section)
+    return summary
+
+
+def llm_main(dry_run=False, db=None) -> int:
+    from backend.app import llm
+
+    if not llm.key_is_valid(llm.get_api_key()):
+        print("No valid ANTHROPIC_API_KEY in .env; skipping LLM topic pass.")
+        return 0
+    if db is None:
+        from backend.app.db import SessionLocal, init_db
+
+        init_db()
+        with SessionLocal() as session:
+            s = llm_pass(session, dry_run=dry_run)
+    else:
+        s = llm_pass(db, dry_run=dry_run)
+    print(f"LLM topic pass ({s['model']}): labelled {s['labelled']} of {s['total']}, skipped {len(s['skipped'])}"
+          + ("" if dry_run else f", covers coverage {s['coverage']:.2f}") + (" (dry run, nothing written)" if dry_run else ""))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--compare", action="store_true", help="run the comparison (always runs before writing)")
     ap.add_argument("--method", choices=["keyword", "embedding"], help="write this method's labels")
+    ap.add_argument("--llm", action="store_true", help="key-gated LLM refinement pass (final spec Section 8)")
+    ap.add_argument("--dry-run", action="store_true", help="with --llm: print three courses, write nothing")
     args = ap.parse_args()
+    if args.llm:
+        import backend.app  # noqa: F401  (OpenMP settings)
+
+        sys.exit(llm_main(dry_run=args.dry_run))
 
     from backend.app.config import EMBEDDING_DEVICE, EMBEDDING_MODEL  # sets OpenMP env first
     from sentence_transformers import SentenceTransformer
@@ -298,7 +456,13 @@ def main():
         print(table)
         old = COVERAGE_PATH.read_text() if COVERAGE_PATH.exists() else ""
         COVERAGE_PATH.parent.mkdir(parents=True, exist_ok=True)  # docs/ is not in git; fresh clones lack it
-        COVERAGE_PATH.write_text((old[: old.index(TOPIC_SECTION)] if TOPIC_SECTION in old else old.rstrip() + "\n\n") + table)
+        if TOPIC_SECTION in old:  # replace this section only; keep any section after it (e.g. LLM refinement)
+            start = old.index(TOPIC_SECTION)
+            nxt = old.find("\n## ", start + len(TOPIC_SECTION))
+            rest = old[nxt + 1:] if nxt != -1 else ""
+            COVERAGE_PATH.write_text(old[:start] + table + ("\n" + rest if rest else ""))
+        else:
+            COVERAGE_PATH.write_text(old.rstrip() + "\n\n" + table if old.strip() else table)
 
         # Step 4: write labels. Both options are stored; the selected one (or --method) is preferred on read.
         rows = [CourseTopic(course_code=c, topic=tp, role=role, source=m)
