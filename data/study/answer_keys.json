@@ -1,0 +1,2758 @@
+{
+  "_note": "Facilitator only. Feasible = not already taken and readiness ready or not_sure (final spec 12.2).",
+  "A": {
+    "profile": "ml_focused",
+    "completed_courses": [
+      "CSCE 625",
+      "CSCE 629",
+      "MATH 251"
+    ],
+    "interests": [
+      "machine learning",
+      "computer vision",
+      "deep learning"
+    ],
+    "feasible_count": 93,
+    "courses": [
+      {
+        "code": "CSCE 603",
+        "title": "Database Systems and Applications",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 605",
+        "title": "Compiler Design",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 606",
+        "title": "Software Engineering",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 608",
+        "title": "Database Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 611",
+        "title": "Operating Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 612",
+        "title": "Applied Networks and Distributed Processing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 614",
+        "title": "Computer Architecture",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 616",
+        "title": "Introduction to Hardware Design Verification",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 620",
+        "title": "Computational Geometry",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 624",
+        "title": "Sketch Recognition",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 625",
+        "title": "Artificial Intelligence",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 626",
+        "title": "Parallel Algorithm Design and Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 627",
+        "title": "Theory of Computability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 628",
+        "title": "Computational Biology",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 629",
+        "title": "Analysis of Algorithms",
+        "readiness": "not_sure",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 630",
+        "title": "Speech Processing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 631",
+        "title": "Intelligent Agents",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 632",
+        "title": "Accessible Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 633",
+        "title": "Machine Learning",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 634",
+        "title": "Intelligent User Interfaces",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 635",
+        "title": "AI Robotics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 636",
+        "title": "Deep Learning",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 637",
+        "title": "Complexity Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 638",
+        "title": "Natural Language Processing - Foundations and Techniques",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 640",
+        "title": "Quantum Algorithms",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 641",
+        "title": "Computer Graphics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 642",
+        "title": "Deep Reinforcement Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 643",
+        "title": "Seminar in Intelligent Systems and Robotics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 645",
+        "title": "Geometric Modeling",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 646",
+        "title": "Digital Image",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 647",
+        "title": "Image Synthesis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 648",
+        "title": "Computer Aided Sculpting",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 649",
+        "title": "Physically-Based Modeling",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 650",
+        "title": "Virtual Reality",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 652",
+        "title": "Software Reverse Engineering",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 653",
+        "title": "Computer Methods in Applied Sciences",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 654",
+        "title": "Supercomputing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 655",
+        "title": "Human-Centered Computing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 656",
+        "title": "Computers and New Media",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 658",
+        "title": "Randomized Algorithms",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 662",
+        "title": "Distributed Processing Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 664",
+        "title": "Wireless and Mobile Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 665",
+        "title": "Advanced Networking and Security",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 666",
+        "title": "Pattern Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 668",
+        "title": "Distributed Algorithms and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 669",
+        "title": "Computational Optimization",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 670",
+        "title": "Information Storage and Retrieval",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 671",
+        "title": "Computer-Human Interaction",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 672",
+        "title": "Computer Supported Collaborative Work",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 676",
+        "title": "Data Mining and Analysis",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 678",
+        "title": "Distributed Systems and Cloud Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 679",
+        "title": "Data Visualization",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 680",
+        "title": "Testing and Diagnosis of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 701",
+        "title": "Foundations of Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 702",
+        "title": "Law and Policy in Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 703",
+        "title": "Cybersecurity Risk",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 704",
+        "title": "Data Analytics for Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 706",
+        "title": "Structured Programming in C",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 708",
+        "title": "Introduction to Computer Science Concepts and Programming",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 709",
+        "title": "Intermediate Program Design and Development with C++",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 711",
+        "title": "Foundation of Modern Cryptography",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 712",
+        "title": "Digital Forensic Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 713",
+        "title": "Software Security",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 714",
+        "title": "Advanced Hardware Design Functional Verification",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 715",
+        "title": "Secure Authentication Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 716",
+        "title": "Foundations and Applications of Blockchains",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 717",
+        "title": "Algorithmic Game Theory",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 726",
+        "title": "Large-Scale Optimization for Machine Learning",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 727",
+        "title": "Algorithmic Foundations of Big Data Computing",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 735",
+        "title": "Parallel Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 743",
+        "title": "Digital Fabrication Studio",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 748",
+        "title": "Computational Photography",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 749",
+        "title": "Applied Cryptography",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 752",
+        "title": "Robotics and Spatial Intelligence",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 753",
+        "title": "Computer Vision and Robot Perception",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 765",
+        "title": "Network Security",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 600",
+        "title": "Experimental Optics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 601",
+        "title": "Mathematical Methods in Signal Processing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 602",
+        "title": "Computer Communication and Networking",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 605",
+        "title": "Linear Multivariable Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 607",
+        "title": "Advanced Analog Circuit Design Techniques",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 608",
+        "title": "Modern Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 609",
+        "title": "Adaptive Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 610",
+        "title": "Mixed-Signal Interfaces",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 611",
+        "title": "General Theory of Electromechanical Motion Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 612",
+        "title": "Computer Aided Design of Electromechanical Motion Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 613",
+        "title": "Rectifier and Inverter Circuits",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 614",
+        "title": "Power System State Estimation",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 615",
+        "title": "Methods of Electric Power Systems Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 616",
+        "title": "Power System Electromagnetic Transients",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 619",
+        "title": "Internet Protocols and Modeling",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 620",
+        "title": "Network Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 621",
+        "title": "Mobile Wireless Networks",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 625",
+        "title": "Millimeter-wave Integrated Circuits",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 628",
+        "title": "Robust and Optimal Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 629",
+        "title": "Applied Convex Optimization",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 630",
+        "title": "Analysis of Power Electronic Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 632",
+        "title": "Motor Drive Dynamics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 635",
+        "title": "Electromagnetic Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 636",
+        "title": "Phased Arrays",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 637",
+        "title": "Numerical Methods in Electromagnetics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 638",
+        "title": "Antennas and Propagation",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 640",
+        "title": "Thin Film Science and Technology",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 642",
+        "title": "Digital Image Processing and Computer Vision",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 643",
+        "title": "Electric Power System Reliability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 646",
+        "title": "Probability and Random Processes for Information Science",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 647",
+        "title": "Information Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 649",
+        "title": "Pattern Recognition",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 651",
+        "title": "Microprogrammed Control of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 653",
+        "title": "Computer Arithmetic Unit Design",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 658",
+        "title": "Low-Noise Electronic Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 662",
+        "title": "Estimation and Detection Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 665",
+        "title": "Integrated CMOS RF Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 666",
+        "title": "Power System Faults and Protective Relaying",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 667",
+        "title": "Power System Stability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 668",
+        "title": "High Voltage Direct Current (HVDC) Transmission",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 669",
+        "title": "Engineering Applications in Genomics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 671",
+        "title": "Solid State Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 674",
+        "title": "Introduction to Quantum Computing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 676",
+        "title": "Advanced Computer Architecture",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 679",
+        "title": "Computer Relays for Electric Power Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 680",
+        "title": "Testing and Diagnosis of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 683",
+        "title": "Wireless Communication Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 686",
+        "title": "Electric and Hybrid Vehicles",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 687",
+        "title": "Introduction to VLSI Physical Design Automation",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 688",
+        "title": "IC MEMS and Sensor Fabrication",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 704",
+        "title": "VLSI Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 710",
+        "title": "Switching Power Supplies",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 711",
+        "title": "Sustainable Energy and Vehicle Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 712",
+        "title": "Power Electronics for Photovoltaic Energy Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 713",
+        "title": "Data Sciences and Applications for Modern Power",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 714",
+        "title": "Digital Integrated Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 715",
+        "title": "Physical and Economical Operations of Sustainable Energy Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 716",
+        "title": "Smart Power Distribution Systems Analysis and Operation",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 719",
+        "title": "Advanced Digital System Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 720",
+        "title": "High-Speed Links Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 721",
+        "title": "Optical Interconnects Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 722",
+        "title": "Field Programmable Gate Arrays Information Processing Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 723",
+        "title": "Introduction to Formal Verification",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 724",
+        "title": "Visual Navigation and Foundation Models for Autonomy",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 726",
+        "title": "Neuromorphic In-Memory-Computing with Memristors",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 732",
+        "title": "Online Decision Making and Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 733",
+        "title": "Advanced Micromachining Technologies for the Informational Era",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 738",
+        "title": "Power Electronics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 740",
+        "title": "Machine Learning Engineering",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 741",
+        "title": "Electronic Motor Drives",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 742",
+        "title": "DSP Based Electromechanical Motion Control",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 743",
+        "title": "Reinforcement Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 744",
+        "title": "Scientific Machine Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 748",
+        "title": "Data Stream Algorithms and Applications",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 749",
+        "title": "Microprocessor Systems Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 750",
+        "title": "Design and Analysis of Communication Networks",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 752",
+        "title": "Advances in VLSI Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 753",
+        "title": "Theory and Applications of Network Coding",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 755",
+        "title": "Stochastic Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 756",
+        "title": "Game Theory",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 757",
+        "title": "Distributed Systems and Cloud Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 758",
+        "title": "Data Mining and Analysis",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 759",
+        "title": "Hardware Security",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 761",
+        "title": "Biosensors Lab",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 762",
+        "title": "Advanced Ultrasound Imaging Techniques",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 763",
+        "title": "Magnetic Resonance Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 766",
+        "title": "Algorithms in Structural Bioinformatics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 767",
+        "title": "Harnessing Solar Energy: Optics, Photovoltaics and Thermal Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 771",
+        "title": "Fluctuations and Noise Electronics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 772",
+        "title": "Introduction to Microelectromechanical Devices and Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 773",
+        "title": "Introduction to Nanophotonics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 774",
+        "title": "Laser Principles and Applications",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 776",
+        "title": "Unconditionally Secure Electronics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 777",
+        "title": "Photonics: Fiber and Integrated Optics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      }
+    ]
+  },
+  "B": {
+    "profile": "near_graduation",
+    "completed_courses": [
+      "CSCE 606",
+      "CSCE 611",
+      "CSCE 614",
+      "CSCE 625",
+      "CSCE 629",
+      "CSCE 633",
+      "CSCE 662"
+    ],
+    "interests": [
+      "security",
+      "privacy"
+    ],
+    "feasible_count": 96,
+    "courses": [
+      {
+        "code": "CSCE 603",
+        "title": "Database Systems and Applications",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 605",
+        "title": "Compiler Design",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 606",
+        "title": "Software Engineering",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 608",
+        "title": "Database Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 611",
+        "title": "Operating Systems",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 612",
+        "title": "Applied Networks and Distributed Processing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 614",
+        "title": "Computer Architecture",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 616",
+        "title": "Introduction to Hardware Design Verification",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 620",
+        "title": "Computational Geometry",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 624",
+        "title": "Sketch Recognition",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 625",
+        "title": "Artificial Intelligence",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 626",
+        "title": "Parallel Algorithm Design and Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 627",
+        "title": "Theory of Computability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 628",
+        "title": "Computational Biology",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 629",
+        "title": "Analysis of Algorithms",
+        "readiness": "not_sure",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 630",
+        "title": "Speech Processing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 631",
+        "title": "Intelligent Agents",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 632",
+        "title": "Accessible Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 633",
+        "title": "Machine Learning",
+        "readiness": "ready",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 634",
+        "title": "Intelligent User Interfaces",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 635",
+        "title": "AI Robotics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 636",
+        "title": "Deep Learning",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 637",
+        "title": "Complexity Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 638",
+        "title": "Natural Language Processing - Foundations and Techniques",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 640",
+        "title": "Quantum Algorithms",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 641",
+        "title": "Computer Graphics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 642",
+        "title": "Deep Reinforcement Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 643",
+        "title": "Seminar in Intelligent Systems and Robotics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 645",
+        "title": "Geometric Modeling",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 646",
+        "title": "Digital Image",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 647",
+        "title": "Image Synthesis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 648",
+        "title": "Computer Aided Sculpting",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 649",
+        "title": "Physically-Based Modeling",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 650",
+        "title": "Virtual Reality",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 652",
+        "title": "Software Reverse Engineering",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 653",
+        "title": "Computer Methods in Applied Sciences",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 654",
+        "title": "Supercomputing",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 655",
+        "title": "Human-Centered Computing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 656",
+        "title": "Computers and New Media",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 658",
+        "title": "Randomized Algorithms",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 662",
+        "title": "Distributed Processing Systems",
+        "readiness": "one_course_first",
+        "already_taken": true,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 664",
+        "title": "Wireless and Mobile Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 665",
+        "title": "Advanced Networking and Security",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 666",
+        "title": "Pattern Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 668",
+        "title": "Distributed Algorithms and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 669",
+        "title": "Computational Optimization",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 670",
+        "title": "Information Storage and Retrieval",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 671",
+        "title": "Computer-Human Interaction",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 672",
+        "title": "Computer Supported Collaborative Work",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 676",
+        "title": "Data Mining and Analysis",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 678",
+        "title": "Distributed Systems and Cloud Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 679",
+        "title": "Data Visualization",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 680",
+        "title": "Testing and Diagnosis of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 701",
+        "title": "Foundations of Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 702",
+        "title": "Law and Policy in Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 703",
+        "title": "Cybersecurity Risk",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 704",
+        "title": "Data Analytics for Cybersecurity",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 706",
+        "title": "Structured Programming in C",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 708",
+        "title": "Introduction to Computer Science Concepts and Programming",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 709",
+        "title": "Intermediate Program Design and Development with C++",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 711",
+        "title": "Foundation of Modern Cryptography",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 712",
+        "title": "Digital Forensic Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 713",
+        "title": "Software Security",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 714",
+        "title": "Advanced Hardware Design Functional Verification",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 715",
+        "title": "Secure Authentication Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 716",
+        "title": "Foundations and Applications of Blockchains",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 717",
+        "title": "Algorithmic Game Theory",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 726",
+        "title": "Large-Scale Optimization for Machine Learning",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 727",
+        "title": "Algorithmic Foundations of Big Data Computing",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 735",
+        "title": "Parallel Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 743",
+        "title": "Digital Fabrication Studio",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 748",
+        "title": "Computational Photography",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 749",
+        "title": "Applied Cryptography",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "CSCE 752",
+        "title": "Robotics and Spatial Intelligence",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 753",
+        "title": "Computer Vision and Robot Perception",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "CSCE 765",
+        "title": "Network Security",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 600",
+        "title": "Experimental Optics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 601",
+        "title": "Mathematical Methods in Signal Processing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 602",
+        "title": "Computer Communication and Networking",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 605",
+        "title": "Linear Multivariable Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 607",
+        "title": "Advanced Analog Circuit Design Techniques",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 608",
+        "title": "Modern Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 609",
+        "title": "Adaptive Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 610",
+        "title": "Mixed-Signal Interfaces",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 611",
+        "title": "General Theory of Electromechanical Motion Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 612",
+        "title": "Computer Aided Design of Electromechanical Motion Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 613",
+        "title": "Rectifier and Inverter Circuits",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 614",
+        "title": "Power System State Estimation",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 615",
+        "title": "Methods of Electric Power Systems Analysis",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 616",
+        "title": "Power System Electromagnetic Transients",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 619",
+        "title": "Internet Protocols and Modeling",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 620",
+        "title": "Network Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 621",
+        "title": "Mobile Wireless Networks",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 625",
+        "title": "Millimeter-wave Integrated Circuits",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 628",
+        "title": "Robust and Optimal Control",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 629",
+        "title": "Applied Convex Optimization",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 630",
+        "title": "Analysis of Power Electronic Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 632",
+        "title": "Motor Drive Dynamics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 635",
+        "title": "Electromagnetic Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 636",
+        "title": "Phased Arrays",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 637",
+        "title": "Numerical Methods in Electromagnetics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 638",
+        "title": "Antennas and Propagation",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 640",
+        "title": "Thin Film Science and Technology",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 642",
+        "title": "Digital Image Processing and Computer Vision",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 643",
+        "title": "Electric Power System Reliability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 646",
+        "title": "Probability and Random Processes for Information Science",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 647",
+        "title": "Information Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 649",
+        "title": "Pattern Recognition",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 651",
+        "title": "Microprogrammed Control of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 653",
+        "title": "Computer Arithmetic Unit Design",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 658",
+        "title": "Low-Noise Electronic Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 662",
+        "title": "Estimation and Detection Theory",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 665",
+        "title": "Integrated CMOS RF Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 666",
+        "title": "Power System Faults and Protective Relaying",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 667",
+        "title": "Power System Stability",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 668",
+        "title": "High Voltage Direct Current (HVDC) Transmission",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 669",
+        "title": "Engineering Applications in Genomics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 671",
+        "title": "Solid State Devices",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 674",
+        "title": "Introduction to Quantum Computing",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 676",
+        "title": "Advanced Computer Architecture",
+        "readiness": "ready",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 679",
+        "title": "Computer Relays for Electric Power Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 680",
+        "title": "Testing and Diagnosis of Digital Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 683",
+        "title": "Wireless Communication Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 686",
+        "title": "Electric and Hybrid Vehicles",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 687",
+        "title": "Introduction to VLSI Physical Design Automation",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 688",
+        "title": "IC MEMS and Sensor Fabrication",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 704",
+        "title": "VLSI Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 710",
+        "title": "Switching Power Supplies",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 711",
+        "title": "Sustainable Energy and Vehicle Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 712",
+        "title": "Power Electronics for Photovoltaic Energy Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 713",
+        "title": "Data Sciences and Applications for Modern Power",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 714",
+        "title": "Digital Integrated Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 715",
+        "title": "Physical and Economical Operations of Sustainable Energy Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 716",
+        "title": "Smart Power Distribution Systems Analysis and Operation",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 719",
+        "title": "Advanced Digital System Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 720",
+        "title": "High-Speed Links Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 721",
+        "title": "Optical Interconnects Circuits and Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 722",
+        "title": "Field Programmable Gate Arrays Information Processing Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 723",
+        "title": "Introduction to Formal Verification",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 724",
+        "title": "Visual Navigation and Foundation Models for Autonomy",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 726",
+        "title": "Neuromorphic In-Memory-Computing with Memristors",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 732",
+        "title": "Online Decision Making and Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 733",
+        "title": "Advanced Micromachining Technologies for the Informational Era",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 738",
+        "title": "Power Electronics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 740",
+        "title": "Machine Learning Engineering",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 741",
+        "title": "Electronic Motor Drives",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 742",
+        "title": "DSP Based Electromechanical Motion Control",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 743",
+        "title": "Reinforcement Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 744",
+        "title": "Scientific Machine Learning",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 748",
+        "title": "Data Stream Algorithms and Applications",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 749",
+        "title": "Microprocessor Systems Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 750",
+        "title": "Design and Analysis of Communication Networks",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 752",
+        "title": "Advances in VLSI Circuit Design",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 753",
+        "title": "Theory and Applications of Network Coding",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 755",
+        "title": "Stochastic Systems",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 756",
+        "title": "Game Theory",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 757",
+        "title": "Distributed Systems and Cloud Computing",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 758",
+        "title": "Data Mining and Analysis",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 759",
+        "title": "Hardware Security",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 761",
+        "title": "Biosensors Lab",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 762",
+        "title": "Advanced Ultrasound Imaging Techniques",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 763",
+        "title": "Magnetic Resonance Engineering",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 766",
+        "title": "Algorithms in Structural Bioinformatics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 767",
+        "title": "Harnessing Solar Energy: Optics, Photovoltaics and Thermal Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 771",
+        "title": "Fluctuations and Noise Electronics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 772",
+        "title": "Introduction to Microelectromechanical Devices and Systems",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 773",
+        "title": "Introduction to Nanophotonics",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 774",
+        "title": "Laser Principles and Applications",
+        "readiness": "not_sure",
+        "already_taken": false,
+        "feasible": true,
+        "fits_interests": false
+      },
+      {
+        "code": "ECEN 776",
+        "title": "Unconditionally Secure Electronics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": true
+      },
+      {
+        "code": "ECEN 777",
+        "title": "Photonics: Fiber and Integrated Optics",
+        "readiness": "one_course_first",
+        "already_taken": false,
+        "feasible": false,
+        "fits_interests": false
+      }
+    ]
+  }
+}
