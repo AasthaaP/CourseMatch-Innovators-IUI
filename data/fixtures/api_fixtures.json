@@ -11,7 +11,7 @@
     "llm_model": "claude-sonnet-5-5"
   },
   "session": {
-    "student_id": "s_40849a81",
+    "student_id": "s_3f07799e",
     "condition": "system"
   },
   "samples": {
@@ -448,7 +448,7 @@
             {
               "kind": "topics",
               "label": "Course topics",
-              "detail": "robotics, algorithms, computer vision"
+              "detail": "robotics, algorithms, computer vision, sensors"
             },
             {
               "kind": "degree",
@@ -681,7 +681,7 @@
     }
   },
   "profile": {
-    "student_id": "s_40849a81",
+    "student_id": "s_3f07799e",
     "version": 3,
     "is_sample": true,
     "sample_name": "ml_focused",
@@ -736,7 +736,12 @@
         ],
         "active": true
       }
-    ]
+    ],
+    "course_titles": {
+      "CSCE 625": "Artificial Intelligence",
+      "CSCE 629": "Analysis of Algorithms",
+      "MATH 251": "Engineering Mathematics III"
+    }
   },
   "autocomplete": {
     "results": [
