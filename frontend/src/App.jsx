@@ -8,12 +8,13 @@ import Onboarding from './components/Onboarding/Onboarding.jsx'
 import ResultList, { ExampleChips } from './components/ResultList/ResultList.jsx'
 import ChatPanel from './components/ChatPanel/ChatPanel.jsx'
 import BaselinePage from './components/Baseline/BaselinePage.jsx'
+import ProfilePage from './components/ProfilePage/ProfilePage.jsx'
 
 const EXAMPLES = ['machine learning for images', 'distributed cloud systems', 'security and privacy']
 
 function SystemPage() {
   const [studentId, resetStudent] = useStudentId('system')
-  const { status, profile, save, loadSample } = useProfile(studentId, resetStudent)
+  const { status, profile, save, loadSample, replace } = useProfile(studentId, resetStudent)
   const log = useEvents(studentId, 'system')
   const { state, run } = useRecommend(studentId)
   const [query, setQuery] = useState('')
@@ -21,6 +22,7 @@ function SystemPage() {
   // Cancel, even though loading a sample already writes a complete profile on the server.
   const [editing, setEditing] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
+  const [view, setView] = useState('results')  // 'results' | 'profile' (final spec 9.2)
   const [clarification, setClarification] = useState(null)
   const needsOnboarding = status === 'ok' && (!profile?.stated?.program || !profile?.stated?.interests?.length)
 
@@ -53,6 +55,13 @@ function SystemPage() {
   }
   const dismiss = () => { log('clarify_dismissed', { query }); setClarification(null) }
 
+  const openProfile = () => { log('profile_view'); setView('profile') }
+  const backFromProfile = (latest, changed) => {
+    if (latest) replace(latest)
+    setView('results')
+    if (changed && query.trim()) run(query)  // removed or restored an inference: re-rank the current query
+  }
+
   const chatPanel = (
     <ChatPanel studentId={studentId} clarification={clarification} onAnswer={answer} onDismissClarification={dismiss}
       onProfileChanged={() => query.trim() && run(query)} onNewQuery={submit} />
@@ -64,10 +73,14 @@ function SystemPage() {
         <h1 className="text-xl font-semibold text-accent">CourseMatch</h1>
         <div className="flex items-center gap-4 text-sm">
           {USE_FIXTURES && <span className="text-xs text-muted">fixtures mode</span>}
-          <button type="button" onClick={() => setEditing('edit')} className="text-accent underline">Edit profile</button>
+          <button type="button" onClick={openProfile} className="text-accent underline">Your profile</button>
           <button type="button" onClick={() => setChatOpen(true)} className="rounded border border-line px-3 py-1 lg:hidden">Chat</button>
         </div>
       </header>
+      {view === 'profile' ? (
+        <ProfilePage studentId={studentId} initialProfile={profile} onBack={backFromProfile}
+          onEdit={() => { setView('results'); setEditing('edit') }} />
+      ) : (
       <div className="grid gap-6 lg:grid-cols-3">
         <main className="lg:col-span-2">
           <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); submit(query) }}>
@@ -83,7 +96,8 @@ function SystemPage() {
         </main>
         <div className="hidden lg:block">{chatPanel}</div>
       </div>
-      {chatOpen && (  // narrower than 1024px: the chat opens over the list (spec 26.1)
+      )}
+      {chatOpen && view === 'results' && (  // narrower than 1024px: the chat opens over the list (spec 26.1)
         <div className="fixed inset-0 z-30 flex justify-end bg-black/20 lg:hidden" onClick={() => setChatOpen(false)}>
           <div className="h-full w-full max-w-sm bg-white p-3" onClick={(e) => e.stopPropagation()}>
             <button type="button" onClick={() => setChatOpen(false)} className="mb-2 text-sm text-muted underline">Close</button>

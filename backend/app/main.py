@@ -106,6 +106,21 @@ def put_profile(student_id: str, body: S.StatedPatch, db: Session = Depends(get_
         return invalid(e.detail)
 
 
+@app.patch("/api/profile/{student_id}/inferences/{inference_id}", response_model=S.Profile)
+def patch_inference(student_id: str, inference_id: int, body: S.InferencePatch, db: Session = Depends(get_db)):
+    """Final spec 9.1: remove or restore an inferred interest from the profile page."""
+    student = db.get(Student, student_id)
+    if student is None:
+        return unknown_student()
+    try:
+        profile, topic = um.set_inference_active(student_id, inference_id, body.active, db)
+    except um.UnknownInference:
+        return JSONResponse(status_code=404, content={"error": "unknown_inference"})
+    events.log(student.id, student.condition, "inference_restored" if body.active else "inference_removed",
+               payload={"inference_id": inference_id, "value": topic}, db=db)
+    return profile
+
+
 @app.get("/api/samples", response_model=S.SamplesResponse)
 def samples():
     return S.SamplesResponse(samples=[S.SampleInfo(name=k, label=v["label"]) for k, v in um.load_samples_file().items()])

@@ -16,7 +16,7 @@ FeedbackAction = Literal["save", "unsave", "dismiss", "undo_dismiss"]
 EventName = Literal[
     "onboard_start", "onboard_complete", "search", "view_results", "expand", "collapse",
     "save", "unsave", "dismiss", "undo_dismiss", "chat_sent", "clarify_shown",
-    "clarify_answered", "clarify_dismissed",
+    "clarify_answered", "clarify_dismissed", "profile_view", "inference_removed", "inference_restored",
 ]
 
 # 5.2
@@ -70,6 +70,10 @@ class InferenceOut(BaseModel):
     active: bool
 
 
+class InferencePatch(BaseModel):
+    active: bool
+
+
 class Profile(BaseModel):
     student_id: str
     version: int
@@ -77,6 +81,7 @@ class Profile(BaseModel):
     sample_name: Optional[str] = None
     stated: Stated
     inferred: list[InferenceOut] = []
+    course_titles: dict[str, str] = {}
 
 
 # 5.6 / 5.7

@@ -42,6 +42,9 @@ export const getProfile = (id) => (USE_FIXTURES ? fromFixture('profile') : call(
 export const putProfile = (id, stated) =>
   USE_FIXTURES ? fromFixture('profile') : call('PUT', `/api/profile/${id}`, stated)
 
+export const patchInference = (id, inferenceId, active) =>
+  USE_FIXTURES ? fromFixture('profile') : call('PATCH', `/api/profile/${id}/inferences/${inferenceId}`, { active })
+
 export const listSamples = () => (USE_FIXTURES ? fromFixture('samples') : call('GET', '/api/samples'))
 
 export const loadSample = (name, studentId) =>

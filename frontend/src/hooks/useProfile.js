@@ -53,5 +53,8 @@ export function useProfile(studentId, onUnknownStudent) {
     return r
   }, [studentId])
 
-  return { ...state, save, loadSample }
+  // The profile page edits inferences itself and hands the latest profile back.
+  const replace = useCallback((profile) => setState({ status: 'ok', profile, error: null }), [])
+
+  return { ...state, save, loadSample, replace }
 }

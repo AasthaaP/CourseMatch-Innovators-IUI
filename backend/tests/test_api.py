@@ -184,3 +184,31 @@ def test_chat_compares_bare_course_numbers_without_a_verdict(client, monkeypatch
     assert "CSCE 633 Machine Learning (Ready)" in r["reply"] and "CSCE 636 Deep Learning (One course first)" in r["reply"]
     assert "You still need: MATH 304" in r["reply"]
     assert "better" not in r["reply"].lower()  # facts side by side, never a verdict
+
+
+def test_patch_inference_remove_restore_and_404s(client):
+    sid = new_student(client)
+    client.post("/api/feedback", json={"student_id": sid, "course_code": "CSCE 636", "action": "save"})
+    p = client.get(f"/api/profile/{sid}").json()
+    inf = next(i for i in p["inferred"] if i["value"] == "deep learning")
+    r = client.patch(f"/api/profile/{sid}/inferences/{inf['id']}", json={"active": False})
+    assert r.status_code == 200
+    body = r.json()
+    S.Profile.model_validate(body)
+    assert body["version"] == p["version"] + 1
+    assert next(i for i in body["inferred"] if i["id"] == inf["id"])["active"] is False
+    back = client.patch(f"/api/profile/{sid}/inferences/{inf['id']}", json={"active": True}).json()
+    assert next(i for i in back["inferred"] if i["id"] == inf["id"])["active"] is True
+
+    other = new_student(client)
+    r = client.patch(f"/api/profile/{other}/inferences/{inf['id']}", json={"active": False})
+    assert r.status_code == 404 and r.json() == {"error": "unknown_inference"}
+    r = client.patch(f"/api/profile/s_ffffffff/inferences/{inf['id']}", json={"active": False})
+    assert r.status_code == 404 and r.json() == {"error": "unknown_student"}
+
+
+def test_profile_has_course_titles(client):
+    sid = new_student(client)
+    client.put(f"/api/profile/{sid}", json={"completed_courses": ["CSCE 625", "MATH 251"]})
+    assert client.get(f"/api/profile/{sid}").json()["course_titles"] == {
+        "CSCE 625": "Artificial Intelligence", "MATH 251": "Engineering Mathematics III"}

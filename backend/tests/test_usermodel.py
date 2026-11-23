@@ -63,3 +63,52 @@ def test_profile_shape_and_validation(db):
     fields = {d["field"] for d in e.value.detail}
     assert fields == {"completed_courses", "interests"}
     assert e.value.detail[0]["unknown"] == ["CSCE 999"]
+
+
+# ---------------------------------------------------------------- final spec 9.3: removable inferences
+def test_removed_inference_leaves_vector_and_bumps_version(db):
+    from backend.app.topics import student_topic_vector
+
+    um.apply_feedback("s_12345678", "CSCE 601", "save", db)
+    inf = inference(db)
+    v0 = um.get_profile("s_12345678", db)["version"]
+    profile, topic = um.set_inference_active("s_12345678", inf.id, False, db)
+    assert topic == "computer vision" and profile["version"] == v0 + 1
+    assert [i["active"] for i in profile["inferred"]] == [False]
+    assert "computer vision" not in student_topic_vector("s_12345678", db)
+
+
+def test_feedback_on_removed_inference_adds_evidence_but_stays_removed(db):
+    um.apply_feedback("s_12345678", "CSCE 601", "save", db)
+    um.set_inference_active("s_12345678", inference(db).id, False, db)
+    out = um.apply_feedback("s_12345678", "CSCE 602", "save", db)
+    inf = inference(db)
+    assert inf.active == 0 and json.loads(inf.evidence) == ["saved CSCE 601", "saved CSCE 602"]
+    assert inf.weight == pytest.approx(0.30)
+    assert out["inference_changed"] is None
+
+
+def test_restore_uses_current_evidence_weight(db):
+    from backend.app.topics import student_topic_vector
+
+    um.apply_feedback("s_12345678", "CSCE 601", "save", db)
+    um.set_inference_active("s_12345678", inference(db).id, False, db)
+    um.apply_feedback("s_12345678", "CSCE 602", "save", db)
+    profile, _ = um.set_inference_active("s_12345678", inference(db).id, True, db)
+    assert profile["inferred"][0]["active"] is True and profile["inferred"][0]["weight"] == pytest.approx(0.30)
+    assert student_topic_vector("s_12345678", db)["computer vision"] == pytest.approx(0.30)
+
+
+def test_inactive_inference_at_zero_weight_is_kept(db):
+    um.apply_feedback("s_12345678", "CSCE 601", "save", db)
+    um.set_inference_active("s_12345678", inference(db).id, False, db)
+    um.apply_feedback("s_12345678", "CSCE 601", "unsave", db)
+    inf = inference(db)
+    assert inf is not None and inf.weight == 0.0 and inf.active == 0
+
+
+def test_other_students_inference_is_unknown(db):
+    um.apply_feedback("s_12345678", "CSCE 601", "save", db)
+    um.create_student(db, student_id="s_87654321")
+    with pytest.raises(um.UnknownInference):
+        um.set_inference_active("s_87654321", inference(db).id, False, db)

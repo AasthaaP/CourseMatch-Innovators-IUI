@@ -25,6 +25,10 @@ class UnknownStudent(Exception):
     pass
 
 
+class UnknownInference(Exception):
+    pass
+
+
 class ProfileInvalid(Exception):
     """Raised with a list of problems; the API turns it into 422 {"error": "validation", "detail": [...]}."""
 
@@ -74,19 +78,22 @@ def get_profile(student_id, db) -> dict:
     interests = db.scalars(select(StudentInterest).where(StudentInterest.student_id == student_id)
                            .order_by(StudentInterest.id)).all()
     infs = db.scalars(select(Inference).where(Inference.student_id == student_id).order_by(Inference.id)).all()
+    done = sorted(completed_courses(student_id, db))
+    titles = dict(db.execute(select(Course.code, Course.title).where(Course.code.in_(done))).all()) if done else {}
     return {
         "student_id": st.id, "version": st.profile_version, "is_sample": bool(st.is_sample),
         "sample_name": st.sample_name,
         "stated": {
             "program": stated.program if stated else None,
             "graduation_term": stated.graduation_term if stated else None,
-            "completed_courses": sorted(completed_courses(student_id, db)),
+            "completed_courses": done,
             "interests": [i.topic for i in interests],
             "credits_per_term": stated.credits_per_term if stated else None,
             "preferred_days": json.loads(stated.preferred_days) if stated else [],
         },
         "inferred": [{"id": i.id, "kind": i.kind, "value": i.value, "weight": round(i.weight, 4),
                       "evidence": json.loads(i.evidence), "active": bool(i.active)} for i in infs],
+        "course_titles": {c: titles[c] for c in done if c in titles},
     }
 
 
@@ -141,6 +148,18 @@ def update_stated(student_id, patch: dict, db) -> dict:
     st.profile_version += 1
     db.commit()
     return get_profile(student_id, db)
+
+
+def set_inference_active(student_id, inference_id, active: bool, db) -> tuple[dict, str]:
+    """Remove (active=False) or restore an inferred interest from the profile page. Returns (profile, topic)."""
+    st = _student(student_id, db)
+    inf = db.get(Inference, inference_id)
+    if inf is None or inf.student_id != student_id:
+        raise UnknownInference(inference_id)
+    inf.active, inf.updated_at = int(bool(active)), now()
+    st.profile_version += 1
+    db.commit()
+    return get_profile(student_id, db), inf.value
 
 
 def load_samples_file() -> dict:
@@ -227,6 +246,8 @@ def apply_feedback(student_id, course_code, action, db) -> dict:
     db.flush()
     change = None
     for inf in touched:
+        if not inf.active:  # a removed inference still records evidence but is never reported or reactivated
+            continue
         delta = inf.weight - before.get(inf.value, 0.0)
         if delta and (change is None or abs(delta) > abs(change[1])):
             change = (inf, delta)
@@ -236,7 +257,7 @@ def apply_feedback(student_id, course_code, action, db) -> dict:
         direction = "removed" if inf.weight == 0.0 else ("increased" if delta > 0 else "decreased")
         result = {"id": inf.id, "value": inf.value, "weight": inf.weight, "direction": direction}
     for inf in touched:
-        if inf.weight == 0.0:  # spec 19.2: a zero weight row is deleted, not kept
+        if inf.weight == 0.0 and inf.active:  # spec 19.2: a zero weight row is deleted; removed rows are kept
             db.delete(inf)
     st.profile_version += 1
     db.commit()
