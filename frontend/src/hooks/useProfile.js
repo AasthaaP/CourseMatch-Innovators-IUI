@@ -5,11 +5,14 @@ const KEY = 'coursematch_student_id'
 
 // Spec 24.3: read the id from localStorage, otherwise create one via /api/session.
 // reset() forgets a stale id (e.g. after the database was rebuilt) and creates a new one.
-export function useStudentId(condition = 'system') {
+// With an override (the study's task student, final spec 11.2) localStorage is neither read nor written.
+export function useStudentId(condition = 'system', override = null) {
   const key = condition === 'baseline' ? `${KEY}_baseline` : KEY
-  const [id, setId] = useState(() => {
+  const [stored, setId] = useState(() => {
+    if (override) return null
     try { return localStorage.getItem(key) } catch { return null }
   })
+  const id = override || stored
   useEffect(() => {
     if (id) return
     createSession(condition).then((r) => {
@@ -19,9 +22,10 @@ export function useStudentId(condition = 'system') {
     })
   }, [id, key, condition])
   const reset = useCallback(() => {
+    if (override) return
     try { localStorage.removeItem(key) } catch { /* private mode */ }
     setId(null)
-  }, [key])
+  }, [key, override])
   return [id, reset]
 }
 

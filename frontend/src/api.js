@@ -50,8 +50,10 @@ export const listSamples = () => (USE_FIXTURES ? fromFixture('samples') : call('
 export const loadSample = (name, studentId) =>
   USE_FIXTURES ? fromFixture('profile') : call('POST', `/api/samples/${name}/load`, { student_id: studentId })
 
-export const autocomplete = (q, limit = 10) =>
-  USE_FIXTURES ? fromFixture('autocomplete') : call('GET', `/api/courses/autocomplete?${qs({ q, limit })}`)
+export const autocomplete = (q, limit = 10, { recommendableOnly = false } = {}) =>
+  USE_FIXTURES
+    ? fromFixture('autocomplete')
+    : call('GET', `/api/courses/autocomplete?${qs({ q, limit, ...(recommendableOnly ? { recommendable_only: true } : {}) })}`)
 
 export const recommend = (studentId, query, { topK = 10, clarificationAnswer = null } = {}) =>
   USE_FIXTURES
@@ -73,5 +75,23 @@ export const feedback = (studentId, courseCode, action) =>
 export const logEvent = (evt) =>
   USE_FIXTURES ? Promise.resolve({ ok: true }) : call('POST', '/api/events', evt).catch(() => ({ ok: true }))
 
-export const baselineSearch = (q, topK = 10) =>
-  USE_FIXTURES ? fromFixture('baseline') : call('GET', `/api/baseline/search?${qs({ q, top_k: topK })}`)
+// The server logs the baseline search (with the returned codes) when student_id is passed (final spec 10.5).
+export const baselineSearch = (q, topK = 10, studentId = null) =>
+  USE_FIXTURES
+    ? fromFixture('baseline')
+    : call('GET', `/api/baseline/search?${qs({ q, top_k: topK, ...(studentId ? { student_id: studentId } : {}) })}`)
+
+// User study (final spec 10.4). Every call resolves to { ok, data } or { ok: false, status, error }.
+export const study = {
+  config: () => call('GET', '/api/study/config'),
+  start: (code) => call('POST', '/api/study/start', { participant_code: code }),
+  progress: (code) => call('GET', `/api/study/progress/${encodeURIComponent(code)}`),
+  consent: (code) => call('POST', '/api/study/consent', { participant_code: code }),
+  taskStart: (code, taskId) => call('POST', '/api/study/task/start', { participant_code: code, task_id: taskId }),
+  taskSubmit: (code, taskId, courseCodes) =>
+    call('POST', '/api/study/task/submit', { participant_code: code, task_id: taskId, course_codes: courseCodes }),
+  questionnaire: (code, taskId, responses) =>
+    call('POST', '/api/study/questionnaire', { participant_code: code, task_id: taskId, responses }),
+  breakDone: (code) => call('POST', '/api/study/break_done', { participant_code: code }),
+  final: (code, answers) => call('POST', '/api/study/final', { participant_code: code, answers }),
+}
