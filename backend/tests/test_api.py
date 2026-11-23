@@ -156,15 +156,13 @@ def test_index_not_ready(client, monkeypatch):
 
 
 def test_chat_without_key_uses_rules(client, monkeypatch):
-    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    monkeypatch.setenv("COURSEMATCH_CHAT", "auto")
     r = client.post("/api/chat", json={"student_id": new_student(client), "message": "add computer vision"})
     assert r.status_code == 200 and r.json()["action"] == "update_interests"
 
 
 def test_chat_forced_claude_without_key_is_503(client, monkeypatch):
-    monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "claude")
+    monkeypatch.setenv("COURSEMATCH_CHAT", "claude")
     r = client.post("/api/chat", json={"student_id": new_student(client), "message": "hi"})
     assert r.status_code == 503 and r.json()["error"] == "no_api_key"
 
@@ -178,8 +176,7 @@ def test_clarification_answer_adds_interest(client):
 
 
 def test_chat_compares_bare_course_numbers_without_a_verdict(client, monkeypatch):
-    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    monkeypatch.setenv("COURSEMATCH_CHAT", "auto")
     sid = new_student(client)
     client.post("/api/samples/ml_focused/load", json={"student_id": sid})
     r = client.post("/api/chat", json={"student_id": sid, "message": "Which is better for me, 633 or 636?"}).json()

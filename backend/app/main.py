@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from . import chat as chat_mod
 from . import events
+from . import llm
 from . import schemas as S
 from . import usermodel as um
 from .baseline import baseline_service
@@ -73,8 +74,12 @@ def health(db: Session = Depends(get_db)):
             n = len(json.loads(INDEX_FILES["meta"].read_text())["codes"])
         except (OSError, ValueError, KeyError):
             pass
+    key_ok = llm_key_present()
+    mode = llm.get_chat_mode()
+    effective = "claude" if mode == "claude" or (mode == "auto" and key_ok) else "rules"
     return S.HealthResponse(status="ok", database=database, index=index, courses_indexed=n if index else 0,
-                            llm_key_present=llm_key_present())
+                            llm_key_present=key_ok, chat_mode=mode, chat_backend_effective=effective,
+                            llm_model=llm.get_model())
 
 
 @app.post("/api/session", response_model=S.SessionResponse)
@@ -176,22 +181,27 @@ def recommend(body: S.RecommendRequest, db: Session = Depends(get_db)):
             "returned_count": len(results), "clarification": clarification, "results": results}
 
 
+NO_API_KEY = {"error": "no_api_key", "message": "Chat is unavailable. No Anthropic API key is configured."}
+LLM_UNAVAILABLE = {"error": "llm_unavailable", "message": "Chat is unavailable right now. Try again."}
+
+
 @app.post("/api/chat", response_model=S.ChatResponse)
 def chat(body: S.ChatRequest, db: Session = Depends(get_db)):
-    backend = chat_mod.chat_backend()
-    if backend == "claude" and not llm_key_present():  # only when COURSEMATCH_CHAT=claude is forced
-        return JSONResponse(status_code=503, content={
-            "error": "no_api_key", "message": "Chat is unavailable. No Anthropic API key is configured."})
+    """Final spec 6.5 / 6.7. Only COURSEMATCH_CHAT=claude can return 503; auto and rules always answer."""
+    if llm.get_chat_mode() == "claude" and not llm_key_present():
+        return JSONResponse(status_code=503, content=NO_API_KEY)
     student = db.get(Student, body.student_id)
     if student is None:
         return unknown_student()
     try:
         out = chat_mod.handle(student.id, body.message, db)
-    except Exception as e:  # noqa: BLE001  (network or API error: the rest of the UI keeps working)
-        print(f"[chat] model call failed: {e}", file=sys.stderr)
-        return JSONResponse(status_code=503, content={"error": "llm_unavailable",
-                                                      "message": "Chat is unavailable right now. Try again later."})
-    events.log(student.id, student.condition, "chat_sent", payload={"action": out["action"], "parser": backend}, db=db)
+    except chat_mod.NoApiKey:
+        return JSONResponse(status_code=503, content=NO_API_KEY)
+    except llm.LLMUnavailable:
+        return JSONResponse(status_code=503, content=LLM_UNAVAILABLE)
+    events.log(student.id, student.condition, "chat_sent",
+               payload={"action": out["action"], "backend_used": out["backend_used"],
+                        "fallback_reason": out["fallback_reason"]}, db=db)
     return out
 
 

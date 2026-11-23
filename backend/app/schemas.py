@@ -26,6 +26,9 @@ class HealthResponse(BaseModel):
     index: bool
     courses_indexed: int
     llm_key_present: bool
+    chat_mode: Literal["auto", "rules", "claude"]
+    chat_backend_effective: Literal["claude", "rules"]
+    llm_model: str
 
 
 # 5.3
@@ -181,6 +184,9 @@ class ChatResponse(BaseModel):
     reply: str
     profile_changed: bool
     new_query: Optional[str] = None
+    backend_used: Literal["claude", "rules"]
+    fallback_reason: Optional[Literal["no_api_key", "auth_error", "model_not_found",
+                                      "rate_limited", "timeout", "api_error", "invalid_output"]] = None
 
 
 # 5.11

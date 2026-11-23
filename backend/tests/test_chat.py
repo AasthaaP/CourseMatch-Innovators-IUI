@@ -17,7 +17,7 @@ class FakeAnthropic:
     calls = []
     reply = "{}"
 
-    def __init__(self, api_key=None):
+    def __init__(self, api_key=None, **kwargs):
         self.messages = SimpleNamespace(create=self._create)
 
     def _create(self, **kwargs):
@@ -29,8 +29,7 @@ class FakeAnthropic:
 def client(monkeypatch):
     FakeAnthropic.calls = []
     monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
-    monkeypatch.setattr("backend.app.main.llm_key_present", lambda: True)
-    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: True)  # auto mode -> Claude
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test-key")  # auto mode -> Claude
     with TestClient(app) as c:
         yield c
 
@@ -49,13 +48,14 @@ def test_valid_update_interests(client):
     r = client.post("/api/chat", json={"student_id": sid, "message": "I care more about systems than theory now"})
     assert r.status_code == 200
     assert r.json() == {"action": "update_interests", "profile_changed": True, "new_query": None,
+                        "backend_used": "claude", "fallback_reason": None,
                         "reply": "Updated your interests. Added distributed systems and operating systems, removed complexity theory."}
     p = client.get(f"/api/profile/{sid}").json()
     assert p["stated"]["interests"] == ["algorithms", "distributed systems", "operating systems"]
     assert p["version"] == v0 + 1
 
     call = FakeAnthropic.calls[-1]  # spec 21.1 / 21.2: model, limits, prompt, user turn
-    assert call["model"] == "claude-sonnet-4-5" and call["max_tokens"] == 300 and call["temperature"] == 0
+    assert call["model"] == "claude-sonnet-5-5" and call["max_tokens"] == 300 and call["temperature"] == 0
     assert call["messages"] == [{"role": "user", "content": "I care more about systems than theory now"}]
     system = call["system"]
     assert system.startswith("You convert a student's message about course planning into one structured action.")
@@ -67,12 +67,14 @@ def test_valid_update_interests(client):
     assert all(t in system for t in load_taxonomy())
 
 
-def test_invalid_topic_is_rejected_and_writes_nothing(client):
+def test_invalid_topic_is_rejected_and_writes_nothing(client, monkeypatch):
+    monkeypatch.setenv("COURSEMATCH_CHAT", "claude")
     sid = start(client, ["algorithms"])
     v0 = client.get(f"/api/profile/{sid}").json()["version"]
     FakeAnthropic.reply = '{"action":"update_interests","add":["astrology"],"remove":[]}'
     r = client.post("/api/chat", json={"student_id": sid, "message": "add astrology"}).json()
-    assert r == {"action": "none", "reply": "I did not understand that.", "profile_changed": False, "new_query": None}
+    assert r == {"action": "none", "reply": "I did not understand that.", "profile_changed": False, "new_query": None,
+                 "backend_used": "claude", "fallback_reason": None}
     p = client.get(f"/api/profile/{sid}").json()
     assert p["stated"]["interests"] == ["algorithms"] and p["version"] == v0
 
@@ -91,9 +93,7 @@ def test_new_query_and_update_profile(client):
 def test_no_key_uses_rule_parser_without_calling_the_model(monkeypatch):
     FakeAnthropic.calls = []
     monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
-    monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "auto")
+    monkeypatch.setenv("COURSEMATCH_CHAT", "auto")
     with TestClient(app) as c:
         sid = start(c, ["complexity theory"])
         r = c.post("/api/chat", json={"student_id": sid, "message": "I care more about systems than theory now"})
@@ -109,9 +109,7 @@ def test_no_key_uses_rule_parser_without_calling_the_model(monkeypatch):
 def test_forced_claude_without_key_returns_503_without_calling_the_model(monkeypatch):
     FakeAnthropic.calls = []
     monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
-    monkeypatch.setattr("backend.app.main.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.llm_key_present", lambda: False)
-    monkeypatch.setattr("backend.app.config.CHAT_BACKEND", "claude")
+    monkeypatch.setenv("COURSEMATCH_CHAT", "claude")
     with TestClient(app) as c:
         r = c.post("/api/chat", json={"student_id": "s_00000000", "message": "hi"})
     assert r.status_code == 503

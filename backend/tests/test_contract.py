@@ -8,6 +8,7 @@ FX = json.loads(FIXTURES_PATH.read_text())
 
 
 def test_fixture_shapes():
+    S.HealthResponse.model_validate(FX["health"])
     S.Profile.model_validate(FX["profile"])
     S.RecommendResponse.model_validate(FX["recommend"])
     S.BaselineResponse.model_validate(FX["baseline"])
@@ -31,3 +32,8 @@ def test_score_equals_formula():
 def test_baseline_has_no_personalised_keys():
     for r in FX["baseline"]["results"]:
         assert not {"score", "readiness", "explanation", "features"} & r.keys()
+
+
+def test_fixture_chat_routing_fields():
+    assert FX["chat"]["backend_used"] in ("claude", "rules")
+    assert {"chat_mode", "chat_backend_effective", "llm_model"} <= FX["health"].keys()

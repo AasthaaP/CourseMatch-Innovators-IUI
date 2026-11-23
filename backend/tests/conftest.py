@@ -41,3 +41,17 @@ def add_groups(db, code, groups):
 
     for i, (kind, alts) in enumerate(groups):
         db.add(PrereqGroup(course_code=code, group_index=i, kind=kind, alternatives=json.dumps(alts), raw_text=""))
+
+
+@pytest.fixture(autouse=True)
+def isolated_env(tmp_path, monkeypatch):
+    """Never read the developer's real .env or shell key: llm.py sees a temporary .env with the placeholder."""
+    from backend.app import llm
+
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_API_KEY=sk-ant-REPLACE_ME\n")
+    monkeypatch.setattr(llm, "ENV_PATH", env)
+    for name in ("ANTHROPIC_API_KEY", "COURSEMATCH_CHAT", "COURSEMATCH_LLM_MODEL"):
+        monkeypatch.delenv(name, raising=False)
+    llm._clients.clear()
+    return env

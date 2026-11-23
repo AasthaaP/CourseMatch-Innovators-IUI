@@ -1,17 +1,17 @@
 """Chat: one student message -> one validated structured action. The model never ranks, never writes
 an explanation, never states a prerequisite; the normal pipeline runs again afterwards.
 
-Spec: S15 (Section 21). Owner: Shubham. Two parsers produce the action: Claude (needs ANTHROPIC_API_KEY) or
-the key-free rule parser in chat_rules.py. config.CHAT_BACKEND picks one; both go through validate().
+Spec: S15 (Section 21), final spec Section 6. Owner: Shubham. Two parsers produce the action: Claude (through
+llm.py, needs a valid ANTHROPIC_API_KEY) or the key-free rule parser in chat_rules.py. llm.get_chat_mode() picks
+the routing; in auto mode any Claude failure falls back to the rule parser. Both go through validate().
 """
 import json
 import re
 
 from sqlalchemy import delete, select
 
-from . import config
+from . import llm
 from .chat_rules import parse as parse_rules
-from .config import ANTHROPIC_API_KEY, LLM_MODEL
 from .models import Course, Interaction, Student, StudentInterest
 from .topics import load_taxonomy
 
@@ -34,7 +34,11 @@ Allowed shapes:
 {{"action":"update_profile","field":"credits_per_term","value":<int 3-15>}}
 {{"action":"update_profile","field":"graduation_term","value":"<YYYYSP|YYYYSU|YYYYFA>"}}
 {{"action":"explain","course_code":"<DEPT NNN>"}}
+{{"action":"explain","course_codes":["<DEPT NNN>","<DEPT NNN>"]}}
 {{"action":"none"}}
+
+Use "course_codes" with two or three codes when the student asks to compare courses.
+Write a course code exactly as the student wrote it. If the student wrote only a number, such as 701, write only the number.
 
 Every string in "add" and "remove" must be an exact member of this list:
 {taxonomy}
@@ -47,16 +51,19 @@ Rules:
 - If the message does not fit any shape, return {{"action":"none"}}."""
 
 
-def ask_model(message: str) -> str:
-    import anthropic
+BARE_NUM_RE = re.compile(r"^\d{3}$")
 
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    resp = client.messages.create(
-        model=LLM_MODEL, max_tokens=300, temperature=0,
-        system=SYSTEM_PROMPT.format(taxonomy=json.dumps(load_taxonomy())),
-        messages=[{"role": "user", "content": message}],
-    )
-    return "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+
+class NoApiKey(Exception):
+    """COURSEMATCH_CHAT=claude without a valid key; the endpoint returns 503 no_api_key."""
+
+
+def system_prompt() -> str:
+    return SYSTEM_PROMPT.format(taxonomy=json.dumps(load_taxonomy()))
+
+
+def ask_model(message: str) -> str:
+    return llm.complete(system_prompt(), message, max_tokens=300)
 
 
 def validate(raw: str, db) -> dict | None:
@@ -87,9 +94,19 @@ def validate(raw: str, db) -> dict | None:
         else:
             return None
     elif a == "explain":
-        codes = act.get("course_codes", [act.get("course_code")])  # course_codes: rule parser comparisons
+        key = "course_codes" if "course_codes" in act else "course_code"
+        codes = act[key] if key == "course_codes" else [act.get("course_code")]
         if not isinstance(codes, list) or not 1 <= len(codes) <= 3:
             return None
+        resolved = []
+        for code in codes:  # a bare "701" becomes a real course code (final spec 6.4)
+            if isinstance(code, str) and BARE_NUM_RE.match(code):
+                code = resolve_code(None, code, db)
+                if code is None:
+                    return None
+            resolved.append(code)
+        codes = resolved
+        act[key] = codes if key == "course_codes" else codes[0]
         for code in codes:
             if not isinstance(code, str) or not CODE_RE.match(code) or \
                     db.scalar(select(Course.id).where(Course.code == code)) is None:
@@ -192,18 +209,44 @@ def act_on(student_id, act: dict, db) -> dict:
     return dict(NOT_UNDERSTOOD)
 
 
-def chat_backend() -> str:
-    """'claude' or 'rules' for this request (see config.CHAT_BACKEND)."""
-    if config.CHAT_BACKEND in ("claude", "rules"):
-        return config.CHAT_BACKEND
-    return "claude" if config.llm_key_present() else "rules"
-
-
-def handle(student_id, message, db) -> dict:
-    if chat_backend() == "claude":
-        act = validate(ask_model(message), db)
-        return dict(NOT_UNDERSTOOD) if act is None else act_on(student_id, act, db)
+def rules_path(student_id, message, db) -> dict:
+    """The key-free rule parser: parse, validate, act, or say what it understands."""
     act = validate(json.dumps(parse_rules(message, resolve=lambda d, n: resolve_code(d, n, db))), db)
     if act is None or act["action"] == "none":
         return {**NOT_UNDERSTOOD, "reply": RULES_HELP}
     return act_on(student_id, act, db)
+
+
+def _tag(out: dict, backend_used: str, fallback_reason: str | None) -> dict:
+    return {**out, "backend_used": backend_used, "fallback_reason": fallback_reason}
+
+
+def handle(student_id, message, db) -> dict:
+    """Final spec 6.5. Raises NoApiKey, or llm.LLMUnavailable, only in claude mode."""
+    mode = llm.get_chat_mode()
+    if mode == "rules":
+        return _tag(rules_path(student_id, message, db), "rules", None)
+
+    key_ok = llm.key_is_valid(llm.get_api_key())
+    if mode == "claude":
+        if not key_ok:
+            raise NoApiKey()
+        act = validate(ask_model(message), db)
+        if act is None or act["action"] == "none":
+            return _tag(dict(NOT_UNDERSTOOD), "claude", None)
+        return _tag(act_on(student_id, act, db), "claude", None)
+
+    # auto
+    if not key_ok:
+        return _tag(rules_path(student_id, message, db), "rules", "no_api_key")
+    try:
+        raw = ask_model(message)
+    except llm.LLMUnavailable as e:
+        return _tag(rules_path(student_id, message, db), "rules", e.reason)
+    act = validate(raw, db)
+    if act is not None and act["action"] != "none":
+        return _tag(act_on(student_id, act, db), "claude", None)
+    rules_act = validate(json.dumps(parse_rules(message, resolve=lambda d, n: resolve_code(d, n, db))), db)
+    if rules_act is not None and rules_act["action"] != "none":
+        return _tag(act_on(student_id, rules_act, db), "rules", "invalid_output")
+    return _tag({**NOT_UNDERSTOOD, "reply": RULES_HELP}, "claude", None)

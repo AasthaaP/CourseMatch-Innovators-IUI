@@ -5,10 +5,13 @@
     "database": true,
     "index": true,
     "courses_indexed": 170,
-    "llm_key_present": false
+    "llm_key_present": false,
+    "chat_mode": "rules",
+    "chat_backend_effective": "rules",
+    "llm_model": "claude-sonnet-5-5"
   },
   "session": {
-    "student_id": "s_fa9947e9",
+    "student_id": "s_40849a81",
     "condition": "system"
   },
   "samples": {
@@ -678,7 +681,7 @@
     }
   },
   "profile": {
-    "student_id": "s_fa9947e9",
+    "student_id": "s_40849a81",
     "version": 3,
     "is_sample": true,
     "sample_name": "ml_focused",
@@ -793,7 +796,9 @@
     "action": "update_interests",
     "reply": "Updated your interests. Added distributed systems and operating systems, removed nothing.",
     "profile_changed": true,
-    "new_query": null
+    "new_query": null,
+    "backend_used": "rules",
+    "fallback_reason": null
   },
   "chat_no_key": {
     "error": "no_api_key",

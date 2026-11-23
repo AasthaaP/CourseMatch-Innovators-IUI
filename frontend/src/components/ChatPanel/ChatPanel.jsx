@@ -1,11 +1,13 @@
 // Chat panel (spec 28.1) and the clarification prompt (28.2). The backend logs chat_sent (spec 23.2).
-// Chat works without an API key (the backend's rule parser answers). Only a 503 from /api/chat replaces the
-// input with the unavailable message; the rest of the page keeps working.
+// Chat works without an API key (the backend's rule parser answers, and falls back to it on any Claude error).
+// A 503 no_api_key (only when COURSEMATCH_CHAT=claude) replaces the input; a 503 llm_unavailable shows a message
+// for that turn and keeps the input. backend_used and fallback_reason are never shown.
 import { useState } from 'react'
 import { chat } from '../../api.js'
 import Clarification from '../Clarification/Clarification.jsx'
 
 const UNAVAILABLE = 'Chat is unavailable. No API key is configured.'
+const TRY_AGAIN = 'Chat is unavailable right now. Try again.'
 
 export default function ChatPanel({ studentId, clarification, onAnswer, onDismissClarification, onProfileChanged, onNewQuery }) {
   const [messages, setMessages] = useState([])
@@ -22,7 +24,8 @@ export default function ChatPanel({ studentId, clarification, onAnswer, onDismis
     const r = await chat(studentId, message)
     setBusy(false)
     if (!r.ok) {
-      if (r.status === 503) setUnavailable(r.error === 'no_api_key' ? UNAVAILABLE : 'Chat is unavailable right now.')
+      if (r.status === 503 && r.error === 'no_api_key') setUnavailable(UNAVAILABLE)
+      else if (r.status === 503) setMessages((m) => [...m, { from: 'system', text: TRY_AGAIN }])
       else setMessages((m) => [...m, { from: 'system', text: 'Could not reach the server.' }])
       return
     }

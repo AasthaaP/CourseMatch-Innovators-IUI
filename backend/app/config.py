@@ -2,10 +2,17 @@
 from pathlib import Path
 import os
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
+
+from . import llm
 
 ROOT = Path(__file__).resolve().parents[2]
-load_dotenv(ROOT / ".env")
+# Settings from .env that the shell did not set. The LLM settings are left out on purpose: llm.py reads them
+# fresh from .env on every call, so a key pasted into .env takes effect without a restart.
+_LLM_SETTINGS = {"ANTHROPIC_API_KEY", "COURSEMATCH_CHAT", "COURSEMATCH_LLM_MODEL"}
+for _k, _v in dotenv_values(ROOT / ".env").items():
+    if _v is not None and _k not in _LLM_SETTINGS:
+        os.environ.setdefault(_k, _v)
 
 DATA_DIR = ROOT / "data"
 DB_PATH = Path(os.getenv("COURSEMATCH_DB", DATA_DIR / "processed" / "coursematch.db"))
@@ -37,20 +44,14 @@ READINESS_ADJUST = {"ready": 0.15, "one_course_first": -0.20, "not_sure": 0.0}
 FEEDBACK_STEP = 0.15
 FEEDBACK_CAP = 0.60
 
-# Chat (Section 21)
-LLM_MODEL = "claude-sonnet-4-5"
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
-
-
-#   auto   = Claude when a real key is present, otherwise the key-free rule parser (chat_rules.py)
-#   rules  = always the rule parser (deterministic, e.g. for every study session)
-#   claude = always Claude; /api/chat returns 503 no_api_key when the key is missing
-CHAT_BACKEND = os.getenv("COURSEMATCH_CHAT", "auto").strip().lower()
+# Chat (final spec Section 6). Key, model and chat mode live in llm.py and are read fresh on every call:
+#   COURSEMATCH_CHAT=auto   Claude when a valid key is present, the rule parser otherwise or on any failure
+#   COURSEMATCH_CHAT=rules  always the rule parser
+#   COURSEMATCH_CHAT=claude always Claude; /api/chat returns 503 when the key is missing or the call fails
 
 
 def llm_key_present() -> bool:
-    key = ANTHROPIC_API_KEY
-    return bool(key) and "REPLACE_ME" not in key
+    return llm.key_is_valid(llm.get_api_key())
 
 
 CORS_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
