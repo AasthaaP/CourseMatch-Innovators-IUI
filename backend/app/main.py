@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 from . import chat as chat_mod
 from . import events
 from . import llm
+from . import study
 from . import schemas as S
 from . import usermodel as um
 from .baseline import baseline_service
@@ -45,6 +46,7 @@ app = FastAPI(title="CourseMatch API", version="1.0.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"]
 )
+app.include_router(study.router)
 
 
 @app.exception_handler(RequestValidationError)
@@ -139,14 +141,19 @@ def load_sample(name: str, body: S.LoadSampleRequest, db: Session = Depends(get_
 
 
 @app.get("/api/courses/autocomplete", response_model=S.AutocompleteResponse)
-def autocomplete(q: str = Query(""), limit: int = Query(10, ge=1, le=50), db: Session = Depends(get_db)):
-    """Code prefix or title substring, case insensitive; undergraduate courses included (spec 5.8)."""
+def autocomplete(q: str = Query(""), limit: int = Query(10, ge=1, le=50), recommendable_only: bool = Query(False),
+                 db: Session = Depends(get_db)):
+    """Code prefix or title substring, case insensitive; undergraduate courses included (spec 5.8) unless
+    recommendable_only (the study answer bar, final spec 10.5)."""
     q = " ".join(q.split())
     if not q:
         return S.AutocompleteResponse(results=[])
     prefix = q.upper()
-    rows = db.scalars(select(Course).where(or_(Course.code.like(f"{prefix}%"), Course.code.like(f"{prefix.replace(' ', '')}%"),
-                                               func.lower(Course.title).contains(q.lower())))).all()
+    stmt = select(Course).where(or_(Course.code.like(f"{prefix}%"), Course.code.like(f"{prefix.replace(' ', '')}%"),
+                                    func.lower(Course.title).contains(q.lower())))
+    if recommendable_only:
+        stmt = stmt.where(Course.is_recommendable == 1)
+    rows = db.scalars(stmt).all()
     rows.sort(key=lambda c: (not c.code.startswith(prefix), c.code))
     return S.AutocompleteResponse(results=[S.AutocompleteItem(code=c.code, title=c.title, level=c.level)
                                            for c in rows[:limit]])
@@ -188,7 +195,7 @@ def recommend(body: S.RecommendRequest, db: Session = Depends(get_db)):
     clarification = None if body.clarification_answer is not None else maybe_ask(student.id, body.query, ranked, db)
     personalized = ranked[0]["personalized"] if ranked else False
     events.log(student.id, student.condition, "search", query=body.query,
-               payload={"returned_count": len(results), "personalized": personalized,
+               payload={"returned_count": len(results), "codes": [r["code"] for r in results], "personalized": personalized,
                         "clarification_answer": body.clarification_answer}, db=db)
     if clarification:
         events.log(student.id, student.condition, "clarify_shown", query=body.query, payload=clarification, db=db)
@@ -242,6 +249,10 @@ def log_event(body: dict):
 
 
 @app.get("/api/baseline/search", response_model=S.BaselineResponse)
-def baseline_search(q: str = Query(...), top_k: int = Query(10, ge=1, le=50), db: Session = Depends(get_db)):
+def baseline_search(q: str = Query(...), top_k: int = Query(10, ge=1, le=50), student_id: str | None = Query(None),
+                    db: Session = Depends(get_db)):
     results = baseline_service.search(q, top_k, db)
+    if student_id:  # final spec 10.5: the server logs the baseline search, with the codes in order
+        events.log(student_id, "baseline", "search", query=q,
+                   payload={"codes": [r["code"] for r in results], "returned_count": len(results)}, db=db)
     return {"query": q, "returned_count": len(results), "results": results}

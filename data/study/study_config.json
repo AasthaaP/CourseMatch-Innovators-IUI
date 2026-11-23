@@ -1,0 +1,39 @@
+{
+  "code_pattern": "^P\\d{3}$",
+  "orders": [
+    [{"task_id": "A", "condition": "system"},   {"task_id": "B", "condition": "baseline"}],
+    [{"task_id": "A", "condition": "baseline"}, {"task_id": "B", "condition": "system"}],
+    [{"task_id": "B", "condition": "system"},   {"task_id": "A", "condition": "baseline"}],
+    [{"task_id": "B", "condition": "baseline"}, {"task_id": "A", "condition": "system"}]
+  ],
+  "tasks": {
+    "practice": {
+      "profile": "systems_switcher",
+      "required": 1,
+      "prompt": "Practice task. This student is interested in distributed systems, operating systems and cloud computing. Find one course you would suggest to them. This task is not scored."
+    },
+    "A": {
+      "profile": "ml_focused",
+      "required": 3,
+      "prompt": "This student is interested in machine learning, computer vision and deep learning. Shortlist three graduate courses you would suggest to them for next semester. Only choose courses they could register for now, given the courses they have already taken."
+    },
+    "B": {
+      "profile": "near_graduation",
+      "required": 3,
+      "prompt": "This student is interested in security and privacy. Shortlist three graduate courses you would suggest to them for next semester. Only choose courses they could register for now, given the courses they have already taken."
+    }
+  },
+  "questionnaire": [
+    {"id": "usefulness",   "text": "This interface helped me find suitable courses for this student."},
+    {"id": "transparency", "text": "I understood why courses were shown to me."},
+    {"id": "confidence",   "text": "I am confident the student could register for the courses I chose."},
+    {"id": "ease",         "text": "This interface was easy to use."},
+    {"id": "control",      "text": "I felt in control of what the interface showed me."}
+  ],
+  "scale": {"min": 1, "max": 7, "min_label": "Strongly disagree", "max_label": "Strongly agree"},
+  "final_questions": [
+    {"id": "why_chosen",   "text": "What made you choose the courses you chose?"},
+    {"id": "distrust",     "text": "Was there anything on screen you did not trust or did not understand?"},
+    {"id": "own_semester", "text": "If you were planning your own semester, which interface would you use, and why?"}
+  ]
+}

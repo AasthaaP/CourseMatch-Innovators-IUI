@@ -146,3 +146,40 @@ class Interaction(Base):
     course_code: Mapped[str | None] = mapped_column(Text, nullable=True)
     query: Mapped[str | None] = mapped_column(Text, nullable=True)
     payload: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON
+
+
+# ---------------------------------------------------------------- user study (final spec 10.1)
+
+
+class StudyParticipant(Base):
+    __tablename__ = "study_participants"
+    code: Mapped[str] = mapped_column(Text, primary_key=True)  # P001
+    order_index: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[str] = mapped_column(Text)
+    consent_at: Mapped[str | None] = mapped_column(Text, nullable=True)
+    completed_at: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class StudySession(Base):
+    __tablename__ = "study_sessions"
+    __table_args__ = (UniqueConstraint("participant_code", "task_id"),)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    participant_code: Mapped[str] = mapped_column(Text, index=True)
+    task_id: Mapped[str] = mapped_column(Text)  # practice | A | B
+    condition: Mapped[str] = mapped_column(Text)  # system | baseline
+    student_id: Mapped[str] = mapped_column(Text)
+    profile_name: Mapped[str] = mapped_column(Text)
+    started_at: Mapped[str] = mapped_column(Text)
+    submitted_at: Mapped[str | None] = mapped_column(Text, nullable=True)
+    duration_s: Mapped[float | None] = mapped_column(Real, nullable=True)
+    answer_codes: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON array
+
+
+class StudyResponse(Base):
+    __tablename__ = "study_responses"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    participant_code: Mapped[str] = mapped_column(Text, index=True)
+    task_id: Mapped[str | None] = mapped_column(Text, nullable=True)  # null for the final questions
+    item_id: Mapped[str] = mapped_column(Text)
+    value: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[str] = mapped_column(Text)
