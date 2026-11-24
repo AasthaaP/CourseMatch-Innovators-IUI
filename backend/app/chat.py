@@ -15,13 +15,14 @@ from .chat_rules import parse as parse_rules
 from .models import Course, Interaction, Student, StudentInterest
 from .topics import load_taxonomy
 
-ACTIONS = {"update_interests", "new_query", "update_profile", "explain", "none"}
+ACTIONS = {"update_interests", "update_courses", "new_query", "update_profile", "explain", "none"}
 CODE_RE = re.compile(r"^[A-Z]{2,5} \d{3}$")
 TERM_RE = re.compile(r"^\d{4}(SP|SU|FA)$")
 NOT_UNDERSTOOD = {"action": "none", "reply": "I did not understand that.", "profile_changed": False, "new_query": None}
 # The rule parser only knows set phrasings, so when it misses it says what it can do.
 RULES_HELP = ('I did not understand that. Try: "add machine learning", "I care more about systems than theory", '
-              '"show me courses on cloud security", "why CSCE 636?", "compare 701 and 702", or "I can only take 6 credits".')
+              '"show me courses on cloud security", "why CSCE 636?", "compare 701 and 702", "I already took MATH 304", '
+              'or "I can only take 6 credits".')
 BADGE = {"ready": "Ready", "one_course_first": "One course first", "not_sure": "Not sure"}
 
 SYSTEM_PROMPT = """You convert a student's message about course planning into one structured action.
@@ -30,6 +31,7 @@ Respond with a single JSON object and nothing else. No prose, no code fences.
 
 Allowed shapes:
 {{"action":"update_interests","add":["<topic>"],"remove":["<topic>"]}}
+{{"action":"update_courses","add":["<DEPT NNN>"],"remove":["<DEPT NNN>"]}}
 {{"action":"new_query","query":"<search text>"}}
 {{"action":"update_profile","field":"credits_per_term","value":<int 3-15>}}
 {{"action":"update_profile","field":"graduation_term","value":"<YYYYSP|YYYYSU|YYYYFA>"}}
@@ -38,6 +40,7 @@ Allowed shapes:
 {{"action":"none"}}
 
 Use "course_codes" with two or three codes when the student asks to compare courses.
+Use "update_courses" when the student says they have completed a course (add) or have not completed one (remove).
 Write a course code exactly as the student wrote it. If the student wrote only a number, such as 701, write only the number.
 
 Every string in "add" and "remove" must be an exact member of this list:
@@ -93,6 +96,19 @@ def validate(raw: str, db) -> dict | None:
                 return None
         else:
             return None
+    elif a == "update_courses":
+        lists = []
+        for k in ("add", "remove"):
+            codes = act.get(k, [])
+            if not isinstance(codes, list) or len(codes) > 5:
+                return None
+            resolved = [_real_code(c, db) for c in codes]
+            if None in resolved:
+                return None
+            act[k] = list(dict.fromkeys(resolved))
+            lists += act[k]
+        if not lists:
+            return None
     elif a == "explain":
         key = "course_codes" if "course_codes" in act else "course_code"
         codes = act[key] if key == "course_codes" else [act.get("course_code")]
@@ -112,6 +128,80 @@ def validate(raw: str, db) -> dict | None:
                     db.scalar(select(Course.id).where(Course.code == code)) is None:
                 return None
     return act
+
+
+def _real_code(code, db) -> str | None:
+    """A catalog course code for "MATH 304" or a bare "304", or None."""
+    if not isinstance(code, str):
+        return None
+    code = code.strip().upper()
+    if BARE_NUM_RE.match(code):
+        return resolve_code(None, code, db)
+    if not CODE_RE.match(code):
+        return None
+    return code if db.scalar(select(Course.id).where(Course.code == code)) is not None else None
+
+
+def courses_reply(student_id, add, remove, db) -> tuple[str, bool]:
+    """Update completed courses and say which courses that changes readiness for, for this student: the
+    badges come from readiness.py, never from a model. Courses in the student's latest results and those
+    matching their interests come first. Returns (reply, profile_changed)."""
+    from .models import Course as C
+    from .readiness import assess, load_overrides
+    from .topics import course_topics, student_topic_vector
+    from .usermodel import completed_courses, update_stated
+
+    before = completed_courses(student_id, db)
+    added = [c for c in add if c not in before]
+    removed = [c for c in remove if c in before]
+    titles = dict(db.execute(select(C.code, C.title).where(C.code.in_(add + remove))).all())
+    name = lambda c: f"{c} {titles.get(c, '')}".strip()  # noqa: E731
+    if not added and not removed:
+        if add:
+            return f"{_join(name(c) for c in add)} {'is' if len(add) == 1 else 'are'} already in your completed courses.", False
+        return f"{_join(name(c) for c in remove)} {'is' if len(remove) == 1 else 'are'} not in your completed courses.", False
+
+    after = (before | set(added)) - set(removed)
+    update_stated(student_id, {"completed_courses": sorted(after)}, db)
+
+    overrides = load_overrides()
+    rows = db.execute(select(C.code, C.title).where(C.is_recommendable == 1)).all()
+    flipped = []  # (code, title, new_state)
+    for code, title in rows:
+        if code in after:
+            continue
+        old, new = assess(code, before, db, overrides), assess(code, after, db, overrides)
+        if old["state"] != new["state"]:  # only the completed courses changed, so they caused it
+            flipped.append((code, title, new["state"]))
+
+    last = db.scalar(select(Interaction.payload).where(Interaction.student_id == student_id,
+                                                       Interaction.event == "search")
+                     .order_by(Interaction.id.desc()).limit(1))
+    shown = (json.loads(last).get("codes", []) if last else [])
+    topics = student_topic_vector(student_id, db)
+
+    def order(item):
+        code = item[0]
+        matched = [t for t in course_topics(code, "covers", db) if topics.get(t, 0) > 0]
+        return (shown.index(code) if code in shown else len(shown), -len(matched), code)
+
+    flipped.sort(key=order)
+    lines = []
+    if added:
+        lines.append(f"Added {_join(name(c) for c in added)} to your completed courses.")
+    if removed:
+        lines.append(f"Removed {_join(name(c) for c in removed)} from your completed courses.")
+    now_ok = [f for f in flipped if f[2] != "one_course_first"]
+    now_blocked = [f for f in flipped if f[2] == "one_course_first"]
+    for label, group in (("You are now ready for", now_ok), ("These now need a course first", now_blocked)):
+        if group:
+            top = [f"{c} {t}" for c, t, _ in group[:5]]
+            more = f" (and {len(group) - 5} more)" if len(group) > 5 else ""
+            lines.append(f"{label}: {_join(top)}{more}.")
+    if not flipped:
+        lines.append("That does not change the badge of any course.")
+    lines.append("Your results are updated.")
+    return "\n".join(lines), True
 
 
 def _join(items) -> str:
@@ -193,6 +283,9 @@ def act_on(student_id, act: dict, db) -> dict:
         db.commit()
         return {"action": a, "reply": f"Updated your interests. Added {_join(added)}, removed {_join(removed)}.",
                 "profile_changed": True, "new_query": None}
+    if a == "update_courses":
+        reply, changed = courses_reply(student_id, act.get("add", []), act.get("remove", []), db)
+        return {"action": a, "reply": reply, "profile_changed": changed, "new_query": None}
     if a == "new_query":
         q = act["query"].strip()
         return {"action": a, "reply": f'Searching for "{q}".', "profile_changed": False, "new_query": q}

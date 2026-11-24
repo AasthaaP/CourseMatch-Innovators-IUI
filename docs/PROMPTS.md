@@ -26,6 +26,7 @@ Respond with a single JSON object and nothing else. No prose, no code fences.
 
 Allowed shapes:
 {"action":"update_interests","add":["<topic>"],"remove":["<topic>"]}
+{"action":"update_courses","add":["<DEPT NNN>"],"remove":["<DEPT NNN>"]}
 {"action":"new_query","query":"<search text>"}
 {"action":"update_profile","field":"credits_per_term","value":<int 3-15>}
 {"action":"update_profile","field":"graduation_term","value":"<YYYYSP|YYYYSU|YYYYFA>"}
@@ -34,6 +35,7 @@ Allowed shapes:
 {"action":"none"}
 
 Use "course_codes" with two or three codes when the student asks to compare courses.
+Use "update_courses" when the student says they have completed a course (add) or have not completed one (remove).
 Write a course code exactly as the student wrote it. If the student wrote only a number, such as 701, write only the number.
 
 Every string in "add" and "remove" must be an exact member of this list:

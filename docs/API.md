@@ -1556,6 +1556,7 @@ Response 200:
       "type": "string",
       "enum": [
         "update_interests",
+        "update_courses",
         "new_query",
         "update_profile",
         "explain",

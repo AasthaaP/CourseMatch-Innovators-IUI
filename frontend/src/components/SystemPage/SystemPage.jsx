@@ -1,6 +1,6 @@
 // The CourseMatch system page: search, ranked results, chat, and the profile page (final spec 9.2).
 import { useCallback, useEffect, useState } from 'react'
-import { USE_FIXTURES } from '../../api.js'
+import { USE_FIXTURES, getProfile } from '../../api.js'
 import { useEvents } from '../../hooks/useEvents.js'
 import { useProfile, useStudentId } from '../../hooks/useProfile.js'
 import { useRecommend } from '../../hooks/useRecommend.js'
@@ -70,7 +70,7 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
 
   const chatPanel = (
     <ChatPanel studentId={studentId} clarification={clarification} onAnswer={answer} onDismissClarification={dismiss}
-      onProfileChanged={rerun} onNewQuery={submit} />
+      onProfileChanged={() => { rerun(); getProfile(studentId).then((r) => r.ok && replace(r.data)) }} onNewQuery={submit} />
   )
 
   return (

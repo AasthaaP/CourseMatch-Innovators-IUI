@@ -11,7 +11,7 @@ ReadinessState = Literal["ready", "one_course_first", "not_sure"]
 Condition = Literal["system", "baseline"]
 Day = Literal["M", "T", "W", "R", "F"]
 FactorKind = Literal["interest", "topics", "degree", "have", "missing", "offered", "workload", "assumes"]
-ChatAction = Literal["update_interests", "new_query", "update_profile", "explain", "none"]
+ChatAction = Literal["update_interests", "update_courses", "new_query", "update_profile", "explain", "none"]
 FeedbackAction = Literal["save", "unsave", "dismiss", "undo_dismiss"]
 EventName = Literal[
     "onboard_start", "onboard_complete", "search", "view_results", "expand", "collapse",

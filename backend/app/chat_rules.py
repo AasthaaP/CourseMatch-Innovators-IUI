@@ -75,6 +75,9 @@ EXPLAIN = re.compile(r"\b(why|explain|tell me about|details|reason|can i take|sh
 DEPARTMENTS = ("csce", "ecen", "math", "stat")
 CREDITS = re.compile(r"\b(\d{1,2})\s*(?:credit|credits|credit hours|hours|hrs)\b")
 TERM = re.compile(r"\b(spring|summer|fall)\s*(?:of\s*)?(20\d{2})\b")
+# "I already did MATH 304", "I have taken 633 and 636", "I haven't taken CSCE 625" (update_courses).
+COMPLETED = re.compile(r"\b(took|taken|did|done|completed|finished|passed|cleared)\b")
+NOT_COMPLETED = re.compile(r"\b(haven'?t|have not|hasn'?t|didn'?t|did not|never|not)\b|\bremove\b")
 GRADUATE = re.compile(r"\b(graduat\w*|finish\w*|done in|complete\w*|leave)\b")
 CONTRAST = re.compile(r"\s+(?:than|instead of|rather than|over|not)\s+")
 CLAUSES = re.compile(r"\s*(?:,|;|\bbut\b|\band also\b|\bwhile\b)\s*")
@@ -148,6 +151,10 @@ def parse(message: str, resolve=None) -> dict:
         return {"action": "none"}
 
     codes = course_codes(text, resolve)
+    if codes and COMPLETED.search(text) and not EXPLAIN.search(text):
+        if NOT_COMPLETED.search(text):
+            return {"action": "update_courses", "add": [], "remove": codes[:5]}
+        return {"action": "update_courses", "add": codes[:5], "remove": []}
     if len(codes) >= 2:
         return {"action": "explain", "course_codes": codes[:3]}
     if codes and (EXPLAIN.search(text) or CODE.fullmatch(text) or text.startswith(codes[0].lower())):
