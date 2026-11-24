@@ -132,6 +132,7 @@ class Features(BaseModel):
     degree_fit: float
     readiness_adjust: float
     retrieval_score: float
+    query_match: float = 1.0  # retrieval score relative to the query's best match
 
 
 class Readiness(BaseModel):

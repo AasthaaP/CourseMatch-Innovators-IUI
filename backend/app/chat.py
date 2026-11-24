@@ -242,10 +242,11 @@ def _explained(student_id, codes, db):
     query = db.scalar(select(Interaction.query).where(Interaction.student_id == student_id,
                                                       Interaction.event == "search")
                       .order_by(Interaction.id.desc()).limit(1)) or " ".join(codes)
-    scores = dict(retrieval_service.search(query)) if retrieval_service.is_ready() else {}
+    hits = retrieval_service.search(query) if retrieval_service.is_ready() else []
+    scores, best = dict(hits), (hits[0][1] if hits else 0.0)
     out = []
     for code in codes:
-        result = rank(student_id, query, [(code, scores.get(code, 0.0))], db, top_k=1)[0]
+        result = rank(student_id, query, [(code, scores.get(code, 0.0))], db, top_k=1, best_score=best)[0]
         out.append((result, build(result, student_id, query, db)))
     return out
 

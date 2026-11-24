@@ -39,6 +39,10 @@ RETRIEVAL_K = 50
 W_INTEREST = 0.60
 W_DEGREE = 0.25
 READINESS_ADJUST = {"ready": 0.15, "one_course_first": -0.20, "not_sure": 0.0}
+# The search term leads, interests refine (deviation from spec 17.1, which used 0.60 raw retrieval + 0.40 overlap).
+# query_match = retrieval score / best retrieval score for this query, so it is 1.0 for the best match.
+QUERY_WEIGHT = 0.70      # interest_match = 0.70 * query_match + 0.30 * topic overlap - 0.20 * penalty
+RELEVANCE_MIN = 0.60     # query_match below this: the course is not about the search; it ranks after all that are
 
 # Feedback inferences (Section 19)
 FEEDBACK_STEP = 0.15

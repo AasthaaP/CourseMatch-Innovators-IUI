@@ -79,3 +79,25 @@ def test_empty_profile_keeps_retrieval_order(mem_db):
     mem_db.commit()
     cands = [("CSCE 603", 0.70), ("CSCE 602", 0.60), ("CSCE 601", 0.50)]
     assert codes(rank("s_dddddddd", "q", cands, mem_db)) == ["CSCE 603", "CSCE 602", "CSCE 601"]
+
+
+# --- search first, interests second (QUERY_WEIGHT, RELEVANCE_MIN) ----------------------------------------
+
+def test_course_matching_only_interests_ranks_after_search_matches(mem_db):
+    setup(mem_db)
+    student(mem_db, "s_eeeeeeee", ["machine learning"])
+    mem_db.commit()
+    # CSCE 601 covers machine learning but is far from the query (0.20 / 0.60 = 0.33 < RELEVANCE_MIN)
+    cands = [("CSCE 602", 0.60), ("CSCE 603", 0.50), ("CSCE 601", 0.20)]
+    ranked = rank("s_eeeeeeee", "q", cands, mem_db)
+    assert [r["code"] for r in ranked][-1] == "CSCE 601"
+    assert ranked[-1]["relevant"] is False and ranked[0]["relevant"] is True
+    assert ranked[0]["features"]["query_match"] == 1.0
+
+
+def test_best_score_override_for_single_course(mem_db):
+    setup(mem_db)
+    student(mem_db, "s_ffffffff", [])
+    mem_db.commit()
+    r = rank("s_ffffffff", "q", [("CSCE 601", 0.20)], mem_db, best_score=0.60)[0]
+    assert r["features"]["query_match"] == round(0.20 / 0.60, 4) and r["relevant"] is False

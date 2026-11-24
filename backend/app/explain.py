@@ -24,8 +24,12 @@ def with_titles(codes, db) -> str:
 
 
 def interest_clause(result, query) -> str:
+    if result["matched_topics"] and result.get("relevant", True) is False:
+        return f'Matches your interest in {result["matched_topics"][0]}, but only loosely related to "{query}".'
     if result["matched_topics"]:
         return f"Matches your interest in {result['matched_topics'][0]}."
+    if result.get("relevant", True) is False:
+        return f'Loosely related to "{query}".'
     if result["features"]["retrieval_score"] >= 0.5:
         return f'Close match for "{query}".'
     return f'Related to "{query}".'
