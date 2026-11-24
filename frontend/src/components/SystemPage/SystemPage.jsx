@@ -95,7 +95,7 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
               examples={EXAMPLES} log={log} />
           </div>
         </main>
-        <div className="hidden lg:block">{chatPanel}</div>
+        <div className="hidden lg:sticky lg:top-4 lg:block lg:h-[calc(100vh-2rem)] lg:self-start">{chatPanel}</div>
       </div>
       )}
       {chatOpen && view === 'results' && (  // narrower than 1024px: the chat opens over the list (spec 26.1)

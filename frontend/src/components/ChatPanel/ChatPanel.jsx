@@ -2,7 +2,7 @@
 // Chat works without an API key (the backend's rule parser answers, and falls back to it on any Claude error).
 // A 503 no_api_key (only when COURSEMATCH_CHAT=claude) replaces the input; a 503 llm_unavailable shows a message
 // for that turn and keeps the input. backend_used and fallback_reason are never shown.
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { chat } from '../../api.js'
 import Clarification from '../Clarification/Clarification.jsx'
 
@@ -14,6 +14,13 @@ export default function ChatPanel({ studentId, clarification, onAnswer, onDismis
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const [unavailable, setUnavailable] = useState(null)
+  const listRef = useRef(null)
+
+  // Keep the newest message in view; the panel has a fixed height and the message list scrolls.
+  useEffect(() => {
+    const el = listRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [messages, clarification, busy])
 
   const send = async (e) => {
     e.preventDefault()
@@ -35,10 +42,10 @@ export default function ChatPanel({ studentId, clarification, onAnswer, onDismis
   }
 
   return (
-    <aside data-testid="chat-panel" className="flex h-full min-h-[24rem] flex-col rounded border border-line p-4 text-sm">
+    <aside data-testid="chat-panel" className="flex h-full min-h-[24rem] flex-col overflow-hidden rounded border border-line p-4 text-sm">
       <h2 className="mb-2 font-semibold">Chat</h2>
       <p className="mb-2 text-xs text-muted">Change your interests or your search in plain words. Chat never ranks courses.</p>
-      <div className="flex-1 space-y-2 overflow-y-auto">
+      <div ref={listRef} data-testid="chat-messages" className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {messages.map((m, i) => (
           <p key={i} className={`whitespace-pre-line rounded px-2 py-1 ${m.from === 'you' ? 'ml-6 bg-accent/5' : 'mr-6 bg-notsure-bg'}`}>{m.text}</p>
         ))}
