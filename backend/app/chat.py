@@ -12,7 +12,7 @@ from sqlalchemy import delete, select
 
 from . import llm
 from .chat_rules import parse as parse_rules
-from .models import Course, Interaction, Student, StudentInterest
+from .models import Course, Inference, Interaction, Student, StudentInterest
 from .topics import load_taxonomy
 
 ACTIONS = {"update_interests", "update_courses", "new_query", "update_profile", "explain", "none"}
@@ -31,6 +31,7 @@ Respond with a single JSON object and nothing else. No prose, no code fences.
 
 Allowed shapes:
 {{"action":"update_interests","add":["<topic>"],"remove":["<topic>"]}}
+{{"action":"update_interests","add":["<topic>"],"remove":[],"replace":true}}
 {{"action":"update_courses","add":["<DEPT NNN>"],"remove":["<DEPT NNN>"]}}
 {{"action":"new_query","query":"<search text>"}}
 {{"action":"update_profile","field":"credits_per_term","value":<int 3-15>}}
@@ -40,6 +41,7 @@ Allowed shapes:
 {{"action":"none"}}
 
 Use "course_codes" with two or three codes when the student asks to compare courses.
+Use "replace":true only when the student wants the added topics to replace all current interests ("only", "nothing else", "switch to").
 Use "update_courses" when the student says they have completed a course (add) or have not completed one (remove).
 Write a course code exactly as the student wrote it. If the student wrote only a number, such as 701, write only the number.
 
@@ -82,6 +84,8 @@ def validate(raw: str, db) -> dict | None:
     if a == "update_interests":
         add, remove = act.get("add", []), act.get("remove", [])
         if not isinstance(add, list) or not isinstance(remove, list) or not set(add + remove) <= taxonomy:
+            return None
+        if not isinstance(act.get("replace", False), bool) or (act.get("replace") and not add):
             return None
     elif a == "new_query":
         if not isinstance(act.get("query"), str) or not act["query"].strip():
@@ -204,6 +208,23 @@ def courses_reply(student_id, add, remove, db) -> tuple[str, bool]:
     return "\n".join(lines), True
 
 
+def interests_reply(added, removed, paused, student_id, db) -> str:
+    """Say only what changed; keep the spec 21.4 wording when both lists have items."""
+    if added and removed:
+        lines = [f"Updated your interests. Added {_join(added)}, removed {_join(removed)}."]
+    elif added:
+        lines = [f"Updated your interests. Added {_join(added)}."]
+    else:
+        lines = [f"Updated your interests. Removed {_join(removed)}." if removed else "Updated your interests."]
+    if paused:
+        lines.append(f"Also switched off what I had inferred from your saves ({_join(paused)}). "
+                     "You can restore it on Your profile.")
+    now = list(db.scalars(select(StudentInterest.topic).where(StudentInterest.student_id == student_id)
+                          .order_by(StudentInterest.id)))
+    lines.append(f"Your interests are now: {_join(now) if now else 'none'}.")
+    return "\n".join(lines)
+
+
 def _join(items) -> str:
     items = list(items)
     if not items:
@@ -272,16 +293,28 @@ def act_on(student_id, act: dict, db) -> dict:
     a = act["action"]
     st = db.get(Student, student_id)
     if a == "update_interests":
-        have = set(db.scalars(select(StudentInterest.topic).where(StudentInterest.student_id == student_id)))
-        added = [t for t in dict.fromkeys(act.get("add", [])) if t not in have]
-        removed = [t for t in dict.fromkeys(act.get("remove", [])) if t in have]
+        have = list(db.scalars(select(StudentInterest.topic).where(StudentInterest.student_id == student_id)
+                               .order_by(StudentInterest.id)))
+        add = list(dict.fromkeys(act.get("add", [])))
+        added = [t for t in add if t not in have]
+        drop = [t for t in have if t not in add] if act.get("replace") else act.get("remove", [])
+        removed = [t for t in dict.fromkeys(drop) if t in have]
         db.add_all(StudentInterest(student_id=student_id, topic=t, weight=1.0, source="stated") for t in added)
         if removed:
             db.execute(delete(StudentInterest).where(StudentInterest.student_id == student_id,
                                                      StudentInterest.topic.in_(removed)))
+        paused = []
+        if act.get("replace"):  # also switch off inferred interests; they can be restored on the profile page
+            for inf in db.scalars(select(Inference).where(Inference.student_id == student_id, Inference.active == 1,
+                                                          Inference.weight > 0, Inference.value.not_in(add))):
+                inf.active = 0
+                paused.append(inf.value)
+        if not (added or removed or paused):
+            return {"action": a, "reply": f"Your interests already include {_join(add)}. Nothing changed.",
+                    "profile_changed": False, "new_query": None}
         st.profile_version += 1
         db.commit()
-        return {"action": a, "reply": f"Updated your interests. Added {_join(added)}, removed {_join(removed)}.",
+        return {"action": a, "reply": interests_reply(added, removed, paused, student_id, db),
                 "profile_changed": True, "new_query": None}
     if a == "update_courses":
         reply, changed = courses_reply(student_id, act.get("add", []), act.get("remove", []), db)

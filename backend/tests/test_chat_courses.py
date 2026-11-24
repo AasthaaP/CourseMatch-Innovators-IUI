@@ -72,3 +72,36 @@ def test_already_taken_and_remove(db):
     out = chat.act_on(sid, {"action": "update_courses", "add": [], "remove": ["MATH 304"]}, db)
     assert "These now need a course first: CSCE 636 Deep Learning." in out["reply"]
     assert completed_courses(sid, db) == {"CSCE 625"}
+
+
+# --- update_interests with replace: "focus on X now, nothing else" ---------------------------------------
+
+@pytest.mark.parametrize("msg, replace", [
+    ("I want to focus on software now, nothing else", True), ("only security", True), ("switch to databases", True),
+    ("add security", False), ("I just want to add robotics", False), ("security instead of machine learning", False),
+])
+def test_replace_phrases(msg, replace):
+    assert parse(msg).get("replace", False) is replace
+
+
+def test_replace_clears_other_interests_and_inferences(db):
+    from backend.app.models import Inference
+
+    sid = student(db, [])
+    update_stated(sid, {"interests": ["machine learning", "computer vision"]}, db)
+    db.add(Inference(student_id=sid, value="deep learning", weight=0.3, active=1, created_at="t", updated_at="t"))
+    db.commit()
+    out = chat.act_on(sid, {"action": "update_interests", "add": ["software engineering"], "remove": [], "replace": True}, db)
+    assert out["reply"] == ("Updated your interests. Added software engineering, removed machine learning and computer vision.\n"
+                            "Also switched off what I had inferred from your saves (deep learning). "
+                            "You can restore it on Your profile.\nYour interests are now: software engineering.")
+    assert db.query(Inference).filter_by(student_id=sid).one().active == 0
+
+
+def test_reply_never_says_removed_nothing(db):
+    sid = student(db, [])
+    out = chat.act_on(sid, {"action": "update_interests", "add": ["security"], "remove": []}, db)
+    assert out["reply"] == "Updated your interests. Added security.\nYour interests are now: machine learning and security."
+    again = chat.act_on(sid, {"action": "update_interests", "add": ["security"], "remove": []}, db)
+    assert again["profile_changed"] is False and again["reply"] == "Your interests already include security. Nothing changed."
+    assert chat.validate('{"action":"update_interests","add":[],"remove":[],"replace":true}', db) is None

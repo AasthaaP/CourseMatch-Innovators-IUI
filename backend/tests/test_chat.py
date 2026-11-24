@@ -49,7 +49,8 @@ def test_valid_update_interests(client):
     assert r.status_code == 200
     assert r.json() == {"action": "update_interests", "profile_changed": True, "new_query": None,
                         "backend_used": "claude", "fallback_reason": None,
-                        "reply": "Updated your interests. Added distributed systems and operating systems, removed complexity theory."}
+                        "reply": "Updated your interests. Added distributed systems and operating systems, removed complexity theory.\n"
+                                 "Your interests are now: algorithms, distributed systems and operating systems."}
     p = client.get(f"/api/profile/{sid}").json()
     assert p["stated"]["interests"] == ["algorithms", "distributed systems", "operating systems"]
     assert p["version"] == v0 + 1

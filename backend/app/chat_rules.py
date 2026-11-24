@@ -65,6 +65,9 @@ ALIASES = {
 
 NEGATIVE = re.compile(r"\b(not|no longer|don'?t|do not|remove|drop|delete|less|stop|without|anymore|any more|"
                       r"no more|bored of|tired of|done with|instead of)\b")
+# "only X", "X and nothing else", "switch to X", "focus completely on X": X replaces every current interest.
+REPLACE = re.compile(r"\b(only|nothing else|instead|exclusively|completely|entirely|switch(?:ing)? to|"
+                     r"change (?:my )?(?:focus|interests?) to)\b")
 NEW_QUERY = re.compile(r"^(?:can you |could you |please )?(?:show me|find(?: me)?|search(?: for)?|look(?:ing)? for|"
                        r"what about|how about|anything (?:on|about))\s+(.*)$")
 COURSE_WORDS = re.compile(r"\b(?:courses?|classes?)\b(?:\s+(?:on|about|in|for|related to))?")
@@ -122,6 +125,8 @@ def _interests(text: str) -> dict | None:
     remove = list(dict.fromkeys(remove))
     if not add and not remove:
         return None
+    if add and REPLACE.search(text) and not re.search(r"\binstead of\b", text):
+        return {"action": "update_interests", "add": add, "remove": remove, "replace": True}
     return {"action": "update_interests", "add": add, "remove": remove}
 
 
