@@ -47,7 +47,8 @@ function Chip({ on, onClick, children, removable }) {
   )
 }
 
-export default function Onboarding({ profile, onSave, onLoadSample, onDone, onCancel, log }) {
+// isEdit: reopened from the profile (Edit) rather than first-time setup; the button reads Save changes, not Start.
+export default function Onboarding({ profile, onSave, onLoadSample, onDone, onCancel, log, isEdit = false }) {
   const terms = useMemo(() => nextTerms(), [])
   const stated = profile?.stated || {}
   const [program, setProgram] = useState(stated.program || '')
@@ -205,8 +206,9 @@ export default function Onboarding({ profile, onSave, onLoadSample, onDone, onCa
       <div className="flex items-center gap-3 pb-8">
         <button type="button" disabled={!canStart} onClick={start}
           className="rounded bg-accent px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">
-          {busy ? 'Saving…' : 'Start'}
+          {busy ? 'Saving…' : isEdit ? 'Save changes' : 'Start'}
         </button>
+        {isEdit && onCancel && !busy && <button type="button" onClick={onCancel} className="text-sm text-muted underline">Cancel</button>}
         {!canStart && !busy && <span className="text-sm text-muted">Choose a program and at least one interest.</span>}
       </div>
     </div>

@@ -42,7 +42,7 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
     return (
       <div className="px-4 py-6">
         <h1 className="mx-auto mb-4 max-w-3xl text-xl font-semibold text-accent">CourseMatch</h1>
-        <Onboarding profile={profile} onSave={save} onLoadSample={loadSample} log={log}
+        <Onboarding profile={profile} onSave={save} onLoadSample={loadSample} log={log} isEdit={editing === 'edit'}
           onCancel={editing === 'edit' ? () => setEditing(false) : null}
           onDone={() => { setEditing(false); if (query.trim()) run(query) }} />
       </div>
