@@ -9,8 +9,8 @@ import Clarification from '../Clarification/Clarification.jsx'
 const UNAVAILABLE = 'Chat is unavailable. No API key is configured.'
 const TRY_AGAIN = 'Chat is unavailable right now. Try again.'
 
-export default function ChatPanel({ studentId, clarification, onAnswer, onDismissClarification, onProfileChanged, onNewQuery }) {
-  const [messages, setMessages] = useState([])
+// messages/setMessages come from SystemPage (useChatHistory) so the conversation outlives this component.
+export default function ChatPanel({ studentId, messages, setMessages, clarification, onAnswer, onDismissClarification, onProfileChanged, onNewQuery }) {
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const [unavailable, setUnavailable] = useState(null)

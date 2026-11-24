@@ -4,6 +4,7 @@ import { USE_FIXTURES, getProfile } from '../../api.js'
 import { useEvents } from '../../hooks/useEvents.js'
 import { useProfile, useStudentId } from '../../hooks/useProfile.js'
 import { useRecommend } from '../../hooks/useRecommend.js'
+import { useChatHistory } from '../../hooks/useChatHistory.js'
 import Onboarding from '../Onboarding/Onboarding.jsx'
 import ResultList, { ExampleChips } from '../ResultList/ResultList.jsx'
 import ChatPanel from '../ChatPanel/ChatPanel.jsx'
@@ -18,6 +19,7 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
   const { status, profile, save, loadSample, replace } = useProfile(studentId, resetStudent)
   const log = useEvents(studentId, 'system')
   const { state, run } = useRecommend(studentId)
+  const [chatMessages, setChatMessages] = useChatHistory(studentId)
   const [query, setQuery] = useState('')
   // false | 'required' (incomplete profile) | 'edit' (Edit profile). Onboarding stays open until Start or
   // Cancel, even though loading a sample already writes a complete profile on the server.
@@ -69,7 +71,7 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
   }
 
   const chatPanel = (
-    <ChatPanel studentId={studentId} clarification={clarification} onAnswer={answer} onDismissClarification={dismiss}
+    <ChatPanel studentId={studentId} messages={chatMessages} setMessages={setChatMessages} clarification={clarification} onAnswer={answer} onDismissClarification={dismiss}
       onProfileChanged={() => { rerun(); getProfile(studentId).then((r) => r.ok && replace(r.data)) }} onNewQuery={submit} />
   )
 
