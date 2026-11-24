@@ -35,6 +35,11 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
     if (q.trim()) run(q)
   }, [run])
 
+  // After any profile change, re-run the search whose results are on screen (state.query), not whatever is
+  // in the search box: the box may have been cleared or edited without pressing Search.
+  const lastQuery = state.query || query
+  const rerun = () => { if (lastQuery.trim()) { setQuery(lastQuery); run(lastQuery) } }
+
   if (!studentId || status === 'loading') return <p className="p-6 text-muted">Loading…</p>
   if (status === 'error') return <p className="p-6 text-muted">Could not reach the server.</p>
 
@@ -44,28 +49,28 @@ export default function SystemPage({ studentIdOverride = null, studyMode = false
         <h1 className="mx-auto mb-4 max-w-3xl text-xl font-semibold text-accent">CourseMatch</h1>
         <Onboarding profile={profile} onSave={save} onLoadSample={loadSample} log={log} isEdit={editing === 'edit'}
           onCancel={editing === 'edit' ? () => setEditing(false) : null}
-          onDone={() => { setEditing(false); if (query.trim()) run(query) }} />
+          onDone={() => { setEditing(false); rerun() }} />
       </div>
     )
   }
 
   const answer = (option) => {
-    log('clarify_answered', { query, payload: { option: option.id } })
+    log('clarify_answered', { query: lastQuery, payload: { option: option.id } })
     setClarification(null)
-    run(query, { clarificationAnswer: option.id })
+    run(lastQuery, { clarificationAnswer: option.id })
   }
-  const dismiss = () => { log('clarify_dismissed', { query }); setClarification(null) }
+  const dismiss = () => { log('clarify_dismissed', { query: lastQuery }); setClarification(null) }
 
   const openProfile = () => { log('profile_view'); setView('profile') }
   const backFromProfile = (latest, changed) => {
     if (latest) replace(latest)
     setView('results')
-    if (changed && query.trim()) run(query)  // removed or restored an inference: re-rank the current query
+    if (changed) rerun()  // removed or restored an inference: re-rank the current results
   }
 
   const chatPanel = (
     <ChatPanel studentId={studentId} clarification={clarification} onAnswer={answer} onDismissClarification={dismiss}
-      onProfileChanged={() => query.trim() && run(query)} onNewQuery={submit} />
+      onProfileChanged={rerun} onNewQuery={submit} />
   )
 
   return (
